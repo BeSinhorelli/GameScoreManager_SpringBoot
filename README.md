@@ -17,15 +17,25 @@ Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** p
 ## 🏗️ Estrutura do Projeto
 
 game-score-api/
+<br>
 ├── src/main/java/com/gamescore/
+<br>
 │ ├── controller/ # Controladores REST
+<br>
 │ ├── model/ # Entidades JPA
+<br>
 │ ├── repository/ # Repositórios Spring Data
+<br>
 │ ├── service/ # Lógica de negócio
+<br>
 │ └── GameScoreApiApplication.java
+<br>
 ├── src/main/resources/
+<br>
 │ ├── application.properties
+<br>
 │ └── static/
+<br>
 └── pom.xml
 
 ---
