@@ -1,16 +1,15 @@
-# 🎮 Game Score API
+# 🎮 Sistema de pontuação de jogos
 
-Uma API RESTful desenvolvida em **Spring Boot** para gerenciamento de **jogos, players e scores**.  
-Sistema originalmente adaptado de uma aplicação **desktop Swing** para uma **arquitetura web moderna**.
+Uma API Rest desenvolvida em **Spring Boot** para gerenciamento de **jogos, players e scores**.  
+Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** para uma **arquitetura web moderna**.
 
 ---
 
 ## ✨ Funcionalidades
 
 - ✅ **CRUD Completo** – Create, Read, Update, Delete para todas as entidades  
-- 📄 **Relatórios PDF** – Geração de relatórios com **iText 5**  
 - 📅 **Filtros por Data** – Consultas personalizadas por período  
-- 🌐 **API RESTful** – Endpoints HTTP padrão REST  
+- 🌐 **API REST** – Endpoints HTTP padrão REST  
 - 🗄️ **Persistência MySQL** – Armazenamento robusto com **Spring Data JPA**
 
 ---
