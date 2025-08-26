@@ -17,25 +17,55 @@ Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** p
 
 game-score-api/
 <br>
-├── src/main/java/com/gamescore/
+├── .idea/
 <br>
-│ ├── controller/ # Controladores REST
+├── .mwn/
 <br>
-│ ├── model/ # Entidades JPA
+├── src/
 <br>
-│ ├── repository/ # Repositórios Spring Data
+│   ├── main/
 <br>
-│ ├── service/ # Lógica de negócio
+│   │   ├── java/
 <br>
-│ └── GameScoreApiApplication.java
+│   │   │   └── com/
 <br>
-├── src/main/resources/
+│   │   │       └── gamescore/
 <br>
-│ ├── application.properties
+│   │   │           ├── controller/
 <br>
-│ └── static/
+│   │   │           ├── dto/
 <br>
-└── pom.xml
+│   │   │           ├── model/
+<br>
+│   │   │           ├── repository/
+<br>
+│   │   │           ├── service/
+<br>
+│   │   │           └── GameScoreApiApplication.java
+<br>
+│   │   └── resources/
+<br>
+│   │       ├── static/
+<br>
+│   │       │   ├── alterar/
+<br>
+│   │       │   ├── cadastro/
+<br>
+│   │       │   ├── css/
+<br>
+│   │       │   ├── excluir/
+<br>
+│   │       │   ├── js/
+<br>
+│   │       │   └── listagem/
+<br>
+│   │       ├── templates/
+<br>
+│   │       └── application.properties
+<br>
+│   └── inicial.html
+<br>
+└── target/
 
 ---
 
