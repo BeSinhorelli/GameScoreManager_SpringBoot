@@ -10,6 +10,7 @@ Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** p
 - ✅ **CRUD Completo** – Create, Read, Update, Delete para todas as entidades   
 - 🌐 **API REST** – Endpoints HTTP padrão REST  
 - 🗄️ **Persistência MySQL** – Armazenamento robusto com **Spring Data JPA**
+- 💻 **Sistema web completo** - Feito em HTML, CSS e JavaScript
 
 ---
 
@@ -71,12 +72,13 @@ game-score-api/
 
 ## 🚀 Tecnologias Utilizadas
 
-- ☕ **Java 23**
-- 🍃 **Spring Boot 3.5.5**
-- 🗄️ **Spring Data JPA**
-- 🐬 **MySQL 5.5.5**
-- 📦 **Maven**
-- 🖥️ **Tomcat Embedded**
+-  **Java 23**
+-  **Spring Boot 3.5.5**
+-  **Spring Data JPA**
+-  **MySQL 5.5.5**
+-  **Maven**
+-  **Tomcat Embedded**
+-  **HTML, CSS e JavaScript**
 
 ---
 
