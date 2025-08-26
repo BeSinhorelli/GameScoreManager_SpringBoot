@@ -226,179 +226,308 @@
             padding: 15px;
             color: #7f8c8d;
         }
+
+        .error-message {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="player-icon">
-                <i class="fas fa-user-times"></i>
-            </div>
-            <h1>Excluir Player</h1>
-            <p>Selecione um player para excluir do sistema</p>
+<div class="container">
+    <div class="header">
+        <div class="player-icon">
+            <i class="fas fa-user-times"></i>
         </div>
-        
-        <div id="loading" class="loading">Carregando players...</div>
-        
-        <form id="deleteForm" style="display: none;">
-            <div class="form-group">
-                <label for="player-select">Player:</label>
-                <select id="player-select" name="player" required>
-                    <option value="">Selecione um player</option>
-                    <!-- Os players serão carregados via JavaScript -->
-                </select>
-            </div>
-            
-            <div id="player-details" class="player-details" style="display: none;">
-                <h3>Detalhes do Player</h3>
-                <div class="detail-item">
-                    <span class="detail-label">Nickname:</span>
-                    <span class="detail-value" id="detail-nickname">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Plataforma:</span>
-                    <span class="detail-value" id="detail-platform">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Email:</span>
-                    <span class="detail-value" id="detail-email">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">ID:</span>
-                    <span class="detail-value" id="detail-id">-</span>
-                </div>
-            </div>
-            
-            <div id="warning-message" class="warning-message" style="display: none;">
-                <div class="warning-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <p>Atenção! Esta ação não pode ser desfeita. O player será permanentemente excluído do sistema.</p>
-            </div>
-            
-            <div class="button-group">
-                <button type="button" class="btn btn-cancel" id="cancelButton">
-                    <i class="fas fa-times"></i> Cancelar
-                </button>
-                <button type="submit" class="btn btn-excluir" id="deleteButton">
-                    <i class="fas fa-trash"></i> Excluir
-                </button>
-            </div>
-        </form>
-        
-        <div class="footer">
-            <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
-        </div>
+        <h1>Excluir Player</h1>
+        <p>Selecione um player para excluir do sistema</p>
     </div>
 
-    <script>
-        // Dados simulados de players (em um sistema real, viriam de uma API)
-        const players = [
-            { id: 1, nickname: "joaozinho", platform: "PC", email: "joao@email.com" },
-            { id: 2, nickname: "marygame", platform: "Nintendo Switch", email: "mary@email.com" },
-            { id: 3, nickname: "pedroc", platform: "Xbox", email: "pedro@email.com" },
-            { id: 4, nickname: "aninha", platform: "Playstation", email: "ana@email.com" },
-            { id: 5, nickname: "gamer123", platform: "PC", email: "gamer@email.com" },
-            { id: 6, nickname: "proplayer", platform: "Playstation", email: "pro@email.com" }
-        ];
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Carregando players...
+    </div>
 
-        // Função para traduzir valores de plataforma
-        function getPlatformName(platformValue) {
-            const platforms = {
-                'pc': 'PC',
-                'nintendo': 'Nintendo Switch',
-                'xbox': 'Xbox',
-                'playstation': 'Playstation'
-            };
-            return platforms[platformValue] || platformValue;
+    <div id="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText">Erro ao carregar players.</span>
+    </div>
+
+    <div id="successMessage" class="success-message">
+        <i class="fas fa-check-circle"></i>
+        <span id="successText">Player excluído com sucesso!</span>
+    </div>
+
+    <form id="deleteForm" style="display: none;">
+        <div class="form-group">
+            <label for="player-select">Player:</label>
+            <select id="player-select" name="player" required>
+                <option value="">Selecione um player</option>
+                <!-- Os players serão carregados via JavaScript -->
+            </select>
+        </div>
+
+        <div id="player-details" class="player-details" style="display: none;">
+            <h3>Detalhes do Player</h3>
+            <div class="detail-item">
+                <span class="detail-label">Nickname:</span>
+                <span class="detail-value" id="detail-nickname">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Plataforma:</span>
+                <span class="detail-value" id="detail-plataforma">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value" id="detail-email">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">ID:</span>
+                <span class="detail-value" id="detail-id">-</span>
+            </div>
+        </div>
+
+        <div id="warning-message" class="warning-message" style="display: none;">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <p>Atenção! Esta ação não pode ser desfeita. O player será permanentemente excluído do sistema.</p>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn btn-cancel" id="cancelButton">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-excluir" id="deleteButton">
+                <i class="fas fa-trash"></i> Excluir
+            </button>
+        </div>
+    </form>
+
+    <div class="footer">
+        <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
+    </div>
+</div>
+
+<script>
+    // URL base da API (ajuste conforme necessário)
+    const API_BASE_URL = 'http://localhost:8081/api/players';
+
+    // Variável global
+    let allPlayers = [];
+
+    // Função para mostrar mensagem de erro
+    function showError(message) {
+        const errorElement = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        errorElement.style.display = 'block';
+        errorText.textContent = message;
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            errorElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar mensagem de sucesso
+    function showSuccess(message) {
+        const successElement = document.getElementById('successMessage');
+        const successText = document.getElementById('successText');
+
+        successElement.style.display = 'block';
+        successText.textContent = message;
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            successElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar/ocultar loading
+    function setLoading(loading) {
+        document.getElementById('loading').style.display = loading ? 'block' : 'none';
+    }
+
+    // Função para esconder todas as mensagens
+    function hideMessages() {
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+
+    // Função para buscar players da API
+    async function fetchPlayers() {
+        try {
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(API_BASE_URL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+            }
+
+            const players = await response.json();
+
+            // Verificar se a resposta contém um array
+            if (!Array.isArray(players)) {
+                throw new Error('Resposta da API não é um array válido');
+            }
+
+            allPlayers = players;
+
+            // Preencher dropdown de players
+            const playerSelect = document.getElementById('player-select');
+
+            // Limpar opções existentes (exceto a primeira)
+            while (playerSelect.options.length > 1) {
+                playerSelect.remove(1);
+            }
+
+            // Adicionar players ao dropdown
+            players.forEach(player => {
+                const option = document.createElement('option');
+                option.value = player.id;
+                option.textContent = player.nickname || `Player ${player.id}`;
+                playerSelect.appendChild(option);
+            });
+
+            // Esconder loading e mostrar formulário
+            setLoading(false);
+            document.getElementById('deleteForm').style.display = 'block';
+
+        } catch (error) {
+            console.error('Erro ao buscar players:', error);
+            setLoading(false);
+            showError('Erro ao carregar players. Verifique se a API está rodando em http://localhost:8081');
+        }
+    }
+
+    // Função para excluir player da API
+    async function deletePlayer(playerId) {
+        try {
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(`${API_BASE_URL}/${playerId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
+            }
+
+            showSuccess('Player excluído com sucesso!');
+
+            // Recarregar a lista de players após exclusão
+            setTimeout(() => {
+                fetchPlayers();
+                resetForm();
+            }, 2000);
+
+        } catch (error) {
+            console.error('Erro ao excluir player:', error);
+            showError(error.message || 'Erro ao excluir player. Verifique se a API está rodando.');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // Função para resetar o formulário
+    function resetForm() {
+        document.getElementById('player-select').value = '';
+        document.getElementById('player-details').style.display = 'none';
+        document.getElementById('warning-message').style.display = 'none';
+    }
+
+    // Carregar players quando a página carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchPlayers();
+
+        // Configurar evento de change para o select
+        document.getElementById('player-select').addEventListener('change', function() {
+            const selectedPlayerId = this.value;
+            if (selectedPlayerId) {
+                const selectedPlayer = allPlayers.find(player => player.id == selectedPlayerId);
+
+                if (selectedPlayer) {
+                    // Preencher detalhes do player
+                    document.getElementById('detail-nickname').textContent = selectedPlayer.nickname || 'Nickname não disponível';
+                    document.getElementById('detail-plataforma').textContent = selectedPlayer.plataforma || 'Plataforma não disponível';
+                    document.getElementById('detail-email').textContent = selectedPlayer.email || 'Email não disponível';
+                    document.getElementById('detail-id').textContent = selectedPlayer.id || 'N/A';
+
+                    // Mostrar detalhes e mensagem de aviso
+                    document.getElementById('player-details').style.display = 'block';
+                    document.getElementById('warning-message').style.display = 'block';
+                }
+            } else {
+                // Esconder detalhes e mensagem de aviso
+                document.getElementById('player-details').style.display = 'none';
+                document.getElementById('warning-message').style.display = 'none';
+            }
+        });
+    });
+
+    // Validação do formulário
+    document.getElementById('deleteForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const playerSelect = document.getElementById('player-select');
+
+        if (!playerSelect.value) {
+            showError('Por favor, selecione um player para excluir.');
+            return;
         }
 
-        // Carregar players quando a página carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            const playerSelect = document.getElementById('player-select');
-            const loadingElement = document.getElementById('loading');
-            const deleteForm = document.getElementById('deleteForm');
-            const playerDetails = document.getElementById('player-details');
-            const warningMessage = document.getElementById('warning-message');
-            
-            // Simular carregamento
-            setTimeout(() => {
-                // Preencher dropdown de players
-                players.forEach(player => {
-                    const option = document.createElement('option');
-                    option.value = player.id;
-                    option.textContent = player.nickname;
-                    playerSelect.appendChild(option);
-                });
-                
-                // Esconder loading e mostrar formulário
-                loadingElement.style.display = 'none';
-                deleteForm.style.display = 'block';
-                
-                // Configurar evento de change para o select
-                playerSelect.addEventListener('change', function() {
-                    const selectedPlayerId = this.value;
-                    if (selectedPlayerId) {
-                        const selectedPlayer = players.find(player => player.id == selectedPlayerId);
-                        if (selectedPlayer) {
-                            // Preencher detalhes do player
-                            document.getElementById('detail-nickname').textContent = selectedPlayer.nickname;
-                            document.getElementById('detail-platform').textContent = selectedPlayer.platform;
-                            document.getElementById('detail-email').textContent = selectedPlayer.email;
-                            document.getElementById('detail-id').textContent = selectedPlayer.id;
-                            
-                            // Mostrar detalhes e mensagem de aviso
-                            playerDetails.style.display = 'block';
-                            warningMessage.style.display = 'block';
-                        }
-                    } else {
-                        // Esconder detalhes e mensagem de aviso
-                        playerDetails.style.display = 'none';
-                        warningMessage.style.display = 'none';
-                    }
-                });
-            }, 1000); // Simular tempo de carregamento
-        });
-        
-        // Validação do formulário
-        document.getElementById('deleteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const playerSelect = document.getElementById('player-select');
-            
-            if (!playerSelect.value) {
-                alert('Por favor, selecione um player para excluir.');
-                return;
-            }
-            
-            // Confirmação final
-            if (confirm('Tem certeza absoluta que deseja excluir este player? Esta ação não pode ser desfeita!')) {
-                // Simulação de exclusão bem-sucedida
-                const selectedPlayer = players.find(player => player.id == playerSelect.value);
-                alert(`Player "${selectedPlayer.nickname}" excluído com sucesso!`);
-                
-                // Redireciona para a página inicial
-                window.location.href = '../inicial.html';
-            }
-        });
-        
-        // Botão de cancelar
-        document.getElementById('cancelButton').addEventListener('click', function() {
-            if (confirm('Tem certeza que deseja cancelar a exclusão?')) {
-                window.location.href = '../inicial.html';
-            }
-        });
-        
-        // Efeito de confirmação no botão de excluir
-        document.getElementById('deleteButton').addEventListener('mouseover', function() {
-            if (document.getElementById('player-select').value) {
-                this.style.transform = 'scale(1.05)';
-            }
-        });
-        
-        document.getElementById('deleteButton').addEventListener('mouseout', function() {
-            this.style.transform = 'scale(1)';
-        });
-    </script>
+        // Confirmação final
+        if (confirm('Tem certeza absoluta que deseja excluir este player? Esta ação não pode ser desfeita!')) {
+            const selectedPlayerId = playerSelect.value;
+            deletePlayer(selectedPlayerId);
+        }
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        if (confirm('Tem certeza que deseja cancelar a exclusão?')) {
+            window.location.href = '../inicial.html';
+        }
+    });
+
+    // Efeito de confirmação no botão de excluir
+    document.getElementById('deleteButton').addEventListener('mouseover', function() {
+        if (document.getElementById('player-select').value) {
+            this.style.transform = 'scale(1.05)';
+        }
+    });
+
+    document.getElementById('deleteButton').addEventListener('mouseout', function() {
+        this.style.transform = 'scale(1)';
+    });
+</script>
 </body>
 </html>

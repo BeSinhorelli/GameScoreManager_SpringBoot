@@ -208,6 +208,10 @@
             background: #16a085;
         }
 
+        .type-mundo-aberto {
+            background: #8e44ad;
+        }
+
         .pagination {
             display: flex;
             justify-content: center;
@@ -327,6 +331,7 @@
                 <option value="Esporte">Esporte</option>
                 <option value="Estratégia">Estratégia</option>
                 <option value="Corrida">Corrida</option>
+                <option value="Mundo Aberto">Mundo Aberto</option>
             </select>
 
             <select id="sortBy">
@@ -379,13 +384,12 @@
     // Variáveis globais
     let allGames = [];
     let currentPage = 1;
-    const gamesPerPage = 10; // Aumentei para 10 para melhor visualização
+    const gamesPerPage = 10;
     let filteredGames = [];
     let sortField = 'codigo';
     let sortDirection = 'asc';
     let searchTimeout = null;
 
-    // URL base da API (ajuste conforme necessário)
     const API_BASE_URL = 'http://localhost:8081/api/jogos';
 
     // Função para buscar jogos da API
@@ -414,16 +418,9 @@
             }
 
             console.log('Jogos recebidos:', games.length);
-
-            // Se houver muitos jogos, limitamos para demonstração
-            if (games.length > 100) {
-                allGames = games.slice(0, 100); // Limita a 100 jogos para performance
-                console.log(`Limitando a exibição para 100 jogos de ${games.length} disponíveis`);
-            } else {
-                allGames = games;
-            }
-
+            allGames = games;
             filteredGames = [...allGames];
+
             hideLoading();
             renderGamesTable();
         } catch (error) {
@@ -471,7 +468,7 @@
 
             // Fallback: filtro local se a API falhar
             filteredGames = allGames.filter(game =>
-                game.nome.toLowerCase().includes(searchTerm.toLowerCase())
+                game.nome && game.nome.toLowerCase().includes(searchTerm.toLowerCase())
             );
             renderGamesTable();
         }
@@ -562,7 +559,7 @@
                     case 'estratégia':
                     case 'estrategia': typeClass = 'type-estrategia'; break;
                     case 'corrida': typeClass = 'type-corrida'; break;
-                    case 'mundo aberto': typeClass = 'type-aventura'; break;
+                    case 'mundo aberto': typeClass = 'type-mundo-aberto'; break;
                     default: typeClass = 'type-estrategia';
                 }
             } else {

@@ -217,163 +217,304 @@
             padding: 15px;
             color: #7f8c8d;
         }
+
+        .error-message {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="game-icon">
-                <i class="fas fa-trash"></i>
-            </div>
-            <h1>Excluir Jogo</h1>
-            <p>Selecione um jogo para excluir do sistema</p>
+<div class="container">
+    <div class="header">
+        <div class="game-icon">
+            <i class="fas fa-trash"></i>
         </div>
-        
-        <div id="loading" class="loading">Carregando jogos...</div>
-        
-        <form id="deleteForm" style="display: none;">
-            <div class="form-group">
-                <label for="game-select">Jogo:</label>
-                <select id="game-select" name="game" required>
-                    <option value="">Selecione um jogo</option>
-                    <!-- Os jogos serão carregados via JavaScript -->
-                </select>
-            </div>
-            
-            <div id="game-details" class="game-details" style="display: none;">
-                <h3>Detalhes do Jogo</h3>
-                <div class="detail-item">
-                    <span class="detail-label">Nome:</span>
-                    <span class="detail-value" id="detail-name">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Tipo:</span>
-                    <span class="detail-value" id="detail-type">-</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">ID:</span>
-                    <span class="detail-value" id="detail-id">-</span>
-                </div>
-            </div>
-            
-            <div id="warning-message" class="warning-message" style="display: none;">
-                <div class="warning-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <p>Atenção! Esta ação não pode ser desfeita. O jogo será permanentemente excluído do sistema.</p>
-            </div>
-            
-            <div class="button-group">
-                <button type="button" class="btn btn-cancel" id="cancelButton">
-                    <i class="fas fa-times"></i> Cancelar
-                </button>
-                <button type="submit" class="btn btn-excluir" id="deleteButton">
-                    <i class="fas fa-trash"></i> Excluir
-                </button>
-            </div>
-        </form>
-        
-        <div class="footer">
-            <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
-        </div>
+        <h1>Excluir Jogo</h1>
+        <p>Selecione um jogo para excluir do sistema</p>
     </div>
 
-    <script>
-        // Dados simulados de jogos (em um sistema real, viriam de uma API)
-        const jogos = [
-            { id: 1, nome: "FIFA 2025", tipo: "esportes" },
-            { id: 2, nome: "Call of Duty", tipo: "fps" },
-            { id: 3, nome: "Minecraft", tipo: "aventura" },
-            { id: 4, nome: "Fortnite", tipo: "acao" },
-            { id: 5, nome: "The Witcher 3", tipo: "rpg" },
-            { id: 6, nome: "Civilization VI", tipo: "estrategia" }
-        ];
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Carregando jogos...
+    </div>
 
-        // Carregar jogos quando a página carregar
-        document.addEventListener('DOMContentLoaded', function() {
+    <div id="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText">Erro ao carregar jogos.</span>
+    </div>
+
+    <div id="successMessage" class="success-message">
+        <i class="fas fa-check-circle"></i>
+        <span id="successText">Jogo excluído com sucesso!</span>
+    </div>
+
+    <form id="deleteForm" style="display: none;">
+        <div class="form-group">
+            <label for="game-select">Jogo:</label>
+            <select id="game-select" name="game" required>
+                <option value="">Selecione um jogo</option>
+                <!-- Os jogos serão carregados via JavaScript -->
+            </select>
+        </div>
+
+        <div id="game-details" class="game-details" style="display: none;">
+            <h3>Detalhes do Jogo</h3>
+            <div class="detail-item">
+                <span class="detail-label">Nome:</span>
+                <span class="detail-value" id="detail-name">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Tipo:</span>
+                <span class="detail-value" id="detail-type">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">ID:</span>
+                <span class="detail-value" id="detail-id">-</span>
+            </div>
+        </div>
+
+        <div id="warning-message" class="warning-message" style="display: none;">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <p>Atenção! Esta ação não pode ser desfeita. O jogo será permanentemente excluído do sistema.</p>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn btn-cancel" id="cancelButton">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-excluir" id="deleteButton">
+                <i class="fas fa-trash"></i> Excluir
+            </button>
+        </div>
+    </form>
+
+    <div class="footer">
+        <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
+    </div>
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:8081/api/jogos';
+
+    // Variável global
+    let allGames = [];
+
+    // Função para mostrar mensagem de erro
+    function showError(message) {
+        const errorElement = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        errorElement.style.display = 'block';
+        errorText.textContent = message;
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            errorElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar mensagem de sucesso
+    function showSuccess(message) {
+        const successElement = document.getElementById('successMessage');
+        const successText = document.getElementById('successText');
+
+        successElement.style.display = 'block';
+        successText.textContent = message;
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            successElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar/ocultar loading
+    function setLoading(loading) {
+        document.getElementById('loading').style.display = loading ? 'block' : 'none';
+    }
+
+    // Função para buscar jogos da API
+    async function fetchGames() {
+        try {
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(API_BASE_URL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+            }
+
+            const games = await response.json();
+
+            // Verificar se a resposta contém um array
+            if (!Array.isArray(games)) {
+                throw new Error('Resposta da API não é um array válido');
+            }
+
+            allGames = games;
+
+            // Preencher dropdown de jogos
             const gameSelect = document.getElementById('game-select');
-            const loadingElement = document.getElementById('loading');
-            const deleteForm = document.getElementById('deleteForm');
-            const gameDetails = document.getElementById('game-details');
-            const warningMessage = document.getElementById('warning-message');
-            
-            // Simular carregamento
+
+            // Limpar opções existentes (exceto a primeira)
+            while (gameSelect.options.length > 1) {
+                gameSelect.remove(1);
+            }
+
+            // Adicionar jogos ao dropdown
+            games.forEach(game => {
+                const option = document.createElement('option');
+                option.value = game.codigo || game.id;
+                option.textContent = game.nome || `Jogo ${game.codigo || game.id}`;
+                gameSelect.appendChild(option);
+            });
+
+            // Esconder loading e mostrar formulário
+            setLoading(false);
+            document.getElementById('deleteForm').style.display = 'block';
+
+        } catch (error) {
+            console.error('Erro ao buscar jogos:', error);
+            setLoading(false);
+            showError('Erro ao carregar jogos. Verifique se a API está rodando em http://localhost:8081');
+        }
+    }
+
+    // Função para esconder todas as mensagens
+    function hideMessages() {
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+
+    // Função para excluir jogo da API
+    async function deleteGame(gameId) {
+        try {
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(`${API_BASE_URL}/${gameId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
+            }
+
+            showSuccess('Jogo excluído com sucesso!');
+
+            // Recarregar a lista de jogos após exclusão
             setTimeout(() => {
-                // Preencher dropdown de jogos
-                jogos.forEach(jogo => {
-                    const option = document.createElement('option');
-                    option.value = jogo.id;
-                    option.textContent = jogo.nome;
-                    gameSelect.appendChild(option);
-                });
-                
-                // Esconder loading e mostrar formulário
-                loadingElement.style.display = 'none';
-                deleteForm.style.display = 'block';
-                
-                // Configurar evento de change para o select
-                gameSelect.addEventListener('change', function() {
-                    const selectedGameId = this.value;
-                    if (selectedGameId) {
-                        const selectedGame = jogos.find(jogo => jogo.id == selectedGameId);
-                        if (selectedGame) {
-                            // Preencher detalhes do jogo
-                            document.getElementById('detail-name').textContent = selectedGame.nome;
-                            document.getElementById('detail-type').textContent = selectedGame.tipo;
-                            document.getElementById('detail-id').textContent = selectedGame.id;
-                            
-                            // Mostrar detalhes e mensagem de aviso
-                            gameDetails.style.display = 'block';
-                            warningMessage.style.display = 'block';
-                        }
-                    } else {
-                        // Esconder detalhes e mensagem de aviso
-                        gameDetails.style.display = 'none';
-                        warningMessage.style.display = 'none';
-                    }
-                });
-            }, 1000); // Simular tempo de carregamento
-        });
-        
-        // Validação do formulário
-        document.getElementById('deleteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const gameSelect = document.getElementById('game-select');
-            
-            if (!gameSelect.value) {
-                alert('Por favor, selecione um jogo para excluir.');
-                return;
-            }
-            
-            // Confirmação final
-            if (confirm('Tem certeza absoluta que deseja excluir este jogo? Esta ação não pode ser desfeita!')) {
-                // Simulação de exclusão bem-sucedida
-                const selectedGame = jogos.find(jogo => jogo.id == gameSelect.value);
-                alert(`Jogo "${selectedGame.nome}" excluído com sucesso!`);
-                
-                // Redireciona para a página inicial
-                window.location.href = '../inicial.html';
+                fetchGames();
+                resetForm();
+            }, 2000);
+
+        } catch (error) {
+            console.error('Erro ao excluir jogo:', error);
+            showError(error.message || 'Erro ao excluir jogo. Verifique se a API está rodando.');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // Função para resetar o formulário
+    function resetForm() {
+        document.getElementById('game-select').value = '';
+        document.getElementById('game-details').style.display = 'none';
+        document.getElementById('warning-message').style.display = 'none';
+    }
+
+    // Carregar jogos quando a página carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchGames();
+
+        // Configurar evento de change para o select
+        document.getElementById('game-select').addEventListener('change', function() {
+            const selectedGameId = this.value;
+            if (selectedGameId) {
+                const selectedGame = allGames.find(game =>
+                    (game.codigo == selectedGameId) || (game.id == selectedGameId)
+                );
+
+                if (selectedGame) {
+                    // Preencher detalhes do jogo
+                    document.getElementById('detail-name').textContent = selectedGame.nome || 'Nome não disponível';
+                    document.getElementById('detail-type').textContent = selectedGame.tipo || 'Tipo não disponível';
+                    document.getElementById('detail-id').textContent = selectedGame.codigo || selectedGame.id || 'N/A';
+
+                    // Mostrar detalhes e mensagem de aviso
+                    document.getElementById('game-details').style.display = 'block';
+                    document.getElementById('warning-message').style.display = 'block';
+                }
+            } else {
+                // Esconder detalhes e mensagem de aviso
+                document.getElementById('game-details').style.display = 'none';
+                document.getElementById('warning-message').style.display = 'none';
             }
         });
-        
-        // Botão de cancelar
-        document.getElementById('cancelButton').addEventListener('click', function() {
-            if (confirm('Tem certeza que deseja cancelar a exclusão?')) {
-                window.location.href = '../inicial.html';
-            }
-        });
-        
-        // Efeito de confirmação no botão de excluir
-        document.getElementById('deleteButton').addEventListener('mouseover', function() {
-            if (document.getElementById('game-select').value) {
-                this.style.transform = 'scale(1.05)';
-            }
-        });
-        
-        document.getElementById('deleteButton').addEventListener('mouseout', function() {
-            this.style.transform = 'scale(1)';
-        });
-    </script>
+    });
+
+    // Validação do formulário
+    document.getElementById('deleteForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const gameSelect = document.getElementById('game-select');
+
+        if (!gameSelect.value) {
+            showError('Por favor, selecione um jogo para excluir.');
+            return;
+        }
+
+        // Confirmação final
+        if (confirm('Tem certeza absoluta que deseja excluir este jogo? Esta ação não pode ser desfeita!')) {
+            const selectedGameId = gameSelect.value;
+            deleteGame(selectedGameId);
+        }
+    });
+
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        if (confirm('Tem certeza que deseja cancelar a exclusão?')) {
+            window.location.href = '../inicial.html';
+        }
+    });
+
+    // Efeito de confirmação no botão de excluir
+    document.getElementById('deleteButton').addEventListener('mouseover', function() {
+        if (document.getElementById('game-select').value) {
+            this.style.transform = 'scale(1.05)';
+        }
+    });
+
+    document.getElementById('deleteButton').addEventListener('mouseout', function() {
+        this.style.transform = 'scale(1)';
+    });
+</script>
 </body>
 </html>

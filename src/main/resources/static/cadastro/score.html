@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Score - SCORE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -11,7 +12,7 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #141E30, #243B55);
             display: flex;
@@ -20,7 +21,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -29,31 +30,31 @@
             max-width: 500px;
             padding: 30px;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 25px;
         }
-        
+
         .header h1 {
             color: #2c3e50;
             font-size: 28px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #34495e;
         }
-        
-        .form-group select, 
+
+        .form-group select,
         .form-group input {
             width: 100%;
             padding: 12px 15px;
@@ -62,20 +63,20 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
+
         .form-group select:focus,
         .form-group input:focus {
             border-color: #3498db;
             outline: none;
         }
-        
+
         .calendar {
             margin-bottom: 25px;
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
         }
-        
+
         .calendar-header {
             background: #3498db;
             color: white;
@@ -85,7 +86,7 @@
             align-items: center;
             font-weight: 600;
         }
-        
+
         .calendar-nav {
             background: none;
             border: none;
@@ -96,29 +97,29 @@
             border-radius: 4px;
             transition: background 0.3s;
         }
-        
+
         .calendar-nav:hover {
             background: rgba(255, 255, 255, 0.2);
         }
-        
+
         .weekdays {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             background: #f8f9fa;
             font-weight: 600;
         }
-        
+
         .weekdays div {
             padding: 10px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
-        
+
         .days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
         }
-        
+
         .days div {
             padding: 10px;
             text-align: center;
@@ -130,33 +131,33 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        
+
         .days div:hover {
             background: #e3f2fd;
         }
-        
+
         .days .other-month {
             color: #ccc;
         }
-        
+
         .days .selected {
             background: #3498db;
             color: white;
             font-weight: bold;
         }
-        
+
         .days .today {
             background: #ffeb3b;
             color: #333;
             font-weight: bold;
         }
-        
+
         .button-group {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
         }
-        
+
         .btn {
             padding: 12px 25px;
             border: none;
@@ -166,299 +167,294 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .btn-ok {
             background: #27ae60;
             color: white;
             flex: 1;
             margin-right: 15px;
         }
-        
+
         .btn-ok:hover {
             background: #219653;
         }
-        
+
         .btn-cancel {
             background: #e74c3c;
             color: white;
             flex: 1;
         }
-        
+
         .btn-cancel:hover {
             background: #c0392b;
         }
-        
+
         .footer {
             text-align: center;
             margin-top: 25px;
             color: #7f8c8d;
             font-size: 14px;
         }
-        
+
         .score-icon {
             font-size: 40px;
             margin-bottom: 10px;
         }
-        
+
         .loading {
             color: #7f8c8d;
             text-align: center;
             padding: 10px;
         }
-        
+
         .error {
             color: #e74c3c;
             text-align: center;
             padding: 10px;
             margin-bottom: 15px;
+            display: none;
         }
-        
-        .db-config {
-            background: #f8f9fa;
+
+        .success-message {
+            text-align: center;
             padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
             border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-        }
-        
-        .db-config h3 {
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-        
-        .db-config input {
-            width: 100%;
-            padding: 8px 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        .db-config button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
+            margin: 15px 0;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="score-icon">🏆</div>
-            <h1>SCORE</h1>
-        </div>
-        
-        <div id="loading" class="loading">Carregando...</div>
-        <div id="error" class="error" style="display: none;"></div>
-        
-        <form id="scoreForm" style="display: none;">
-            <div class="form-group">
-                <label for="player">Player:</label>
-                <select id="player" name="player" required>
-                    <option value="">Selecione um player</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="game">Jogo:</label>
-                <select id="game" name="game" required>
-                    <option value="">Selecione um jogo</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="score">Pontuação:</label>
-                <input type="number" id="score" name="score" min="0" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Data do Score:</label>
-                <div class="calendar">
-                    <div class="calendar-header">
-                        <button type="button" class="calendar-nav" id="prev-month">&lt;</button>
-                        <span id="current-month-year">Agosto 2025</span>
-                        <button type="button" class="calendar-nav" id="next-month">&gt;</button>
-                    </div>
-                    <div class="weekdays">
-                        <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
-                    </div>
-                    <div class="days" id="calendar-days">
-                        <!-- Os dias serão gerados via JavaScript -->
-                    </div>
-                </div>
-                <input type="hidden" id="selected-date" name="selected_date">
-            </div>
-            
-            <div class="button-group">
-                <button type="submit" class="btn btn-ok">OK</button>
-                <button type="button" class="btn btn-cancel" id="cancelButton">Cancelar</button>
-            </div>
-        </form>
-        
-        <div class="footer">
-            <p>&copy; 2025 SCORE SYSTEM - Todos os direitos reservados</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <div class="score-icon">🏆</div>
+        <h1>SCORE</h1>
     </div>
 
-   <script>
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Carregando...
+    </div>
+
+    <div id="error" class="error"></div>
+
+    <div id="successMessage" class="success-message">
+        <i class="fas fa-check-circle"></i> Score cadastrado com sucesso!
+    </div>
+
+    <form id="scoreForm" style="display: none;">
+        <div class="form-group">
+            <label for="player">Player:</label>
+            <select id="player" name="player" required>
+                <option value="">Selecione um player</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="game">Jogo:</label>
+            <select id="game" name="game" required>
+                <option value="">Selecione um jogo</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="score">Pontuação:</label>
+            <input type="number" id="score" name="score" min="0" required placeholder="Digite a pontuação">
+        </div>
+
+        <div class="form-group">
+            <label>Data do Score:</label>
+            <div class="calendar">
+                <div class="calendar-header">
+                    <button type="button" class="calendar-nav" id="prev-month">&lt;</button>
+                    <span id="current-month-year">Agosto 2025</span>
+                    <button type="button" class="calendar-nav" id="next-month">&gt;</button>
+                </div>
+                <div class="weekdays">
+                    <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+                </div>
+                <div class="days" id="calendar-days">
+                    <!-- Os dias serão gerados via JavaScript -->
+                </div>
+            </div>
+            <input type="hidden" id="selected-date" name="selected_date">
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-ok">OK</button>
+            <button type="button" class="btn btn-cancel" id="cancelButton">Cancelar</button>
+        </div>
+    </form>
+
+    <div class="footer">
+        <p>&copy; 2025 SCORE SYSTEM - Todos os direitos reservados</p>
+    </div>
+</div>
+
+<script>
+    // URL base da API (ajuste conforme necessário)
+    const API_BASE_URL = 'http://localhost:8081/api';
+
     // Variáveis globais
     let currentDate = new Date();
-    const monthYearElement = document.getElementById('current-month-year');
-    const daysContainer = document.getElementById('calendar-days');
     let selectedDate = new Date();
-    
-    // URL base da sua API Spring Boot (altere para a URL correta)
-    const API_BASE_URL = 'http://localhost:8080/api';
-    
+    let allPlayers = [];
+    let allGames = [];
+
+    // Função para mostrar mensagem de erro
+    function showError(message) {
+        const errorElement = document.getElementById('error');
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            errorElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar mensagem de sucesso
+    function showSuccess(message) {
+        const successElement = document.getElementById('successMessage');
+        successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        successElement.style.display = 'block';
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            successElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar/ocultar loading
+    function setLoading(loading) {
+        document.getElementById('loading').style.display = loading ? 'block' : 'none';
+    }
+
+    // Função para esconder todas as mensagens
+    function hideMessages() {
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+
     // Carregar dados do banco
     document.addEventListener('DOMContentLoaded', function() {
         loadPlayers();
         loadGames();
         renderCalendar();
     });
-    
-    // Carregar players do Spring Boot
+
+    // Carregar players da API
     async function loadPlayers() {
         try {
-            showLoading('Carregando...');
-            
-            // Simulação de chamada para endpoint Spring Boot
-            const response = await fetch(`${API_BASE_URL}/players`);
-            
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(`${API_BASE_URL}/players`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
             if (!response.ok) {
                 throw new Error(`Erro HTTP: ${response.status}`);
             }
-            
+
             const players = await response.json();
-            
+
+            if (!Array.isArray(players)) {
+                throw new Error('Resposta da API não é um array válido');
+            }
+
+            allPlayers = players;
+
             const playerSelect = document.getElementById('player');
             playerSelect.innerHTML = '<option value="">Selecione um player</option>';
-            
+
             players.forEach(player => {
                 const option = document.createElement('option');
                 option.value = player.id;
-                option.textContent = player.nickname;
+                option.textContent = player.nickname || `Player ${player.id}`;
                 playerSelect.appendChild(option);
             });
-            
+
             checkDataLoaded();
         } catch (error) {
             console.error('Erro ao carregar players:', error);
-            
-            // Fallback para dados simulados se a API não estiver disponível
-            const players = [
-                { id: 1, nickname: "joaozinho" },
-                { id: 2, nickname: "marygame" },
-                { id: 3, nickname: "pedroc" },
-                { id: 4, nickname: "aninha" }
-            ];
-            
-            const playerSelect = document.getElementById('player');
-            playerSelect.innerHTML = '<option value="">Selecione um player</option>';
-            
-            players.forEach(player => {
-                const option = document.createElement('option');
-                option.value = player.id;
-                option.textContent = player.nickname;
-                playerSelect.appendChild(option);
-            });
-            
-            checkDataLoaded();
+            showError('Erro ao carregar players. Verifique se a API está rodando.');
         }
     }
-    
-    // Carregar jogos do Spring Boot
+
+    // Carregar jogos da API
     async function loadGames() {
         try {
-            showLoading('Carregando...');
-            
-            // Simulação de chamada para endpoint Spring Boot
-            const response = await fetch(`${API_BASE_URL}/games`);
-            
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(`${API_BASE_URL}/jogos`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
             if (!response.ok) {
                 throw new Error(`Erro HTTP: ${response.status}`);
             }
-            
+
             const games = await response.json();
-            
+
+            if (!Array.isArray(games)) {
+                throw new Error('Resposta da API não é um array válido');
+            }
+
+            allGames = games;
+
             const gameSelect = document.getElementById('game');
             gameSelect.innerHTML = '<option value="">Selecione um jogo</option>';
-            
+
             games.forEach(game => {
                 const option = document.createElement('option');
-                option.value = game.id_game;
-                option.textContent = game.nome;
+                option.value = game.codigo || game.id;
+                option.textContent = game.nome || `Jogo ${game.codigo || game.id}`;
                 gameSelect.appendChild(option);
             });
-            
+
             checkDataLoaded();
         } catch (error) {
             console.error('Erro ao carregar jogos:', error);
-            
-            // Fallback para dados simulados se a API não estiver disponível
-            const games = [
-                { id_game: 1, nome: "FIFA 2025" },
-                { id_game: 2, nome: "Call of Duty" },
-                { id_game: 3, nome: "Minecraft" },
-                { id_game: 4, nome: "Fortnite" }
-            ];
-            
-            const gameSelect = document.getElementById('game');
-            gameSelect.innerHTML = '<option value="">Selecione um jogo</option>';
-            
-            games.forEach(game => {
-                const option = document.createElement('option');
-                option.value = game.id_game;
-                option.textContent = game.nome;
-                gameSelect.appendChild(option);
-            });
-            
-            checkDataLoaded();
+            showError('Erro ao carregar jogos. Verifique se a API está rodando.');
         }
     }
-    
+
     // Verificar se todos os dados foram carregados
     function checkDataLoaded() {
         const playerSelect = document.getElementById('player');
         const gameSelect = document.getElementById('game');
-        
+
         if (playerSelect.options.length > 1 && gameSelect.options.length > 1) {
-            document.getElementById('loading').style.display = 'none';
+            setLoading(false);
             document.getElementById('scoreForm').style.display = 'block';
         }
     }
-    
-    // Mostrar loading
-    function showLoading(message) {
-        const loading = document.getElementById('loading');
-        loading.textContent = message;
-        loading.style.display = 'block';
-    }
-    
-    // Mostrar mensagem de erro
-    function showError(message) {
-        const errorDiv = document.getElementById('error');
-        errorDiv.textContent = message;
-        errorDiv.style.display = 'block';
-        document.getElementById('loading').style.display = 'none';
-    }
-    
+
     // Renderizar calendário
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        
+
         // Atualizar cabeçalho
         const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
                            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-        monthYearElement.textContent = `${monthNames[month]} ${year}`;
-        
+        document.getElementById('current-month-year').textContent = `${monthNames[month]} ${year}`;
+
         // Limpar dias
+        const daysContainer = document.getElementById('calendar-days');
         daysContainer.innerHTML = '';
-        
+
         // Primeiro dia do mês
         const firstDay = new Date(year, month, 1);
         // Último dia do mês
@@ -467,7 +463,7 @@
         const daysInPrevMonth = firstDay.getDay();
         // Total de dias no mês
         const daysInMonth = lastDay.getDate();
-        
+
         // Dias do mês anterior
         const prevMonthLastDay = new Date(year, month, 0).getDate();
         for (let i = daysInPrevMonth - 1; i >= 0; i--) {
@@ -476,40 +472,40 @@
             dayElement.classList.add('other-month');
             daysContainer.appendChild(dayElement);
         }
-        
+
         // Dias do mês atual
         for (let i = 1; i <= daysInMonth; i++) {
             const dayElement = document.createElement('div');
             dayElement.textContent = i;
-            
+
             // Verificar se é o dia atual
             const today = new Date();
             if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
                 dayElement.classList.add('today');
             }
-            
+
             // Verificar se é o dia selecionado
             if (year === selectedDate.getFullYear() && month === selectedDate.getMonth() && i === selectedDate.getDate()) {
                 dayElement.classList.add('selected');
             }
-            
+
             dayElement.addEventListener('click', () => {
                 // Remover seleção anterior
                 document.querySelectorAll('.days div.selected').forEach(el => {
                     el.classList.remove('selected');
                 });
-                
+
                 // Adicionar nova seleção
                 dayElement.classList.add('selected');
-                
+
                 // Atualizar data selecionada
                 selectedDate.setFullYear(year, month, i);
                 document.getElementById('selected-date').value = formatDate(selectedDate);
             });
-            
+
             daysContainer.appendChild(dayElement);
         }
-        
+
         // Dias do próximo mês para completar a grade
         const totalCells = 42; // 6 semanas * 7 dias
         const remainingCells = totalCells - (daysInPrevMonth + daysInMonth);
@@ -519,11 +515,11 @@
             dayElement.classList.add('other-month');
             daysContainer.appendChild(dayElement);
         }
-        
+
         // Atualizar campo de data selecionada
         document.getElementById('selected-date').value = formatDate(selectedDate);
     }
-    
+
     // Formatar data para YYYY-MM-DD
     function formatDate(date) {
         const year = date.getFullYear();
@@ -531,82 +527,78 @@
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
-    
+
     // Navegação do calendário
     document.getElementById('prev-month').addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() - 1);
         renderCalendar();
     });
-    
+
     document.getElementById('next-month').addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() + 1);
         renderCalendar();
     });
-    
-    // Validação do formulário
+
+    // Validação do formulário e envio para API
     document.getElementById('scoreForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        const player = document.getElementById('player').value;
-        const game = document.getElementById('game').value;
-        const score = document.getElementById('score').value;
+
+        const playerId = document.getElementById('player').value;
+        const gameId = document.getElementById('game').value;
+        const scoreValue = document.getElementById('score').value;
         const date = document.getElementById('selected-date').value;
-        
-        if (!player || !game || !score || !date) {
-            alert('Por favor, preencha todos os campos obrigatórios.');
+
+        if (!playerId || !gameId || !scoreValue || !date) {
+            showError('Por favor, preencha todos os campos obrigatórios.');
             return;
         }
-        
+
         try {
-            showLoading('Salvando score...');
-            
-            // Simulação de chamada para endpoint Spring Boot
+            setLoading(true);
+            hideMessages();
+
+            // Dados para enviar à API
+            const scoreData = {
+                player: { id: parseInt(playerId) },
+                jogo: { codigo: parseInt(gameId) },
+                score: parseInt(scoreValue),
+                data: date
+            };
+
             const response = await fetch(`${API_BASE_URL}/scores`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    player_id: player,
-                    game_id: game,
-                    score: score,
-                    date: date
-                })
+                body: JSON.stringify(scoreData)
             });
-            
+
             if (!response.ok) {
-                throw new Error(`Erro HTTP: ${response.status}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
             }
-            
-            const result = await response.json();
-            
-            alert('Score cadastrado com sucesso!');
-            
+
+            const savedScore = await response.json();
+            console.log('Score cadastrado:', savedScore);
+
+            showSuccess(`Score de ${savedScore.score} pontos cadastrado com sucesso!`);
+
             // Limpar formulário
             this.reset();
-            
+
             // Atualizar a seleção do calendário para hoje
             selectedDate = new Date();
             renderCalendar();
-            
+
         } catch (error) {
             console.error('Erro ao salvar score:', error);
-            
-            // Simulação de salvamento bem-sucedido para demonstração
-            alert('Score cadastrado com sucesso! (modo simulação)');
-            
-            // Limpar formulário
-            this.reset();
-            
-            // Atualizar a seleção do calendário para hoje
-            selectedDate = new Date();
-            renderCalendar();
+            showError(error.message || 'Erro ao conectar com o servidor. Verifique se a API está rodando.');
         } finally {
-            document.getElementById('loading').style.display = 'none';
+            setLoading(false);
         }
     });
-    
-    // Botão de cancelar - redireciona para a página inicial
+
     document.getElementById('cancelButton').addEventListener('click', function() {
         if (confirm('Tem certeza que deseja cancelar o cadastro?')) {
             window.location.href = '../inicial.html';

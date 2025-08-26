@@ -31,6 +31,33 @@ public class ScoreController {
     public Score createScore(@RequestBody Score score) {
         return scoreService.save(score);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<Score> updateScore(@PathVariable Integer id, @RequestBody Score scoreDetails) {
+        Optional<Score> optionalScore = scoreService.findById(id);
+
+        if (optionalScore.isPresent()) {
+            Score score = optionalScore.get();
+
+            // Atualizar os campos necessários
+            if (scoreDetails.getScore() != null) {
+                score.setScore(scoreDetails.getScore());
+            }
+            if (scoreDetails.getData() != null) {
+                score.setData(scoreDetails.getData());
+            }
+            if (scoreDetails.getPlayer() != null) {
+                score.setPlayer(scoreDetails.getPlayer());
+            }
+            if (scoreDetails.getJogo() != null) {
+                score.setJogo(scoreDetails.getJogo());
+            }
+
+            Score updatedScore = scoreService.save(score);
+            return ResponseEntity.ok(updatedScore);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteScore(@PathVariable Integer id) {

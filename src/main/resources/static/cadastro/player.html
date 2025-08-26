@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -11,7 +12,7 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             display: flex;
@@ -20,7 +21,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -29,30 +30,36 @@
             max-width: 450px;
             padding: 30px;
         }
-        
+
         .logo {
             text-align: center;
             margin-bottom: 25px;
         }
-        
+
         .logo h1 {
             color: #2c3e50;
             font-size: 28px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
-        
+
+        .player-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
         .input-group {
             margin-bottom: 20px;
         }
-        
+
         .input-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #34495e;
         }
-        
+
         .input-group input {
             width: 100%;
             padding: 12px 15px;
@@ -61,30 +68,30 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
+
         .input-group input:focus {
             border-color: #3498db;
             outline: none;
         }
-        
+
         .platform-group {
             margin-bottom: 25px;
         }
-        
+
         .platform-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #34495e;
         }
-        
+
         .platform-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 10px;
         }
-        
+
         .platform-option {
             display: flex;
             align-items: center;
@@ -95,27 +102,27 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .platform-option:hover {
             background: #e9ecef;
         }
-        
+
         .platform-option input {
             margin-right: 8px;
         }
-        
+
         .platform-option.selected {
             background: #3498db;
             color: white;
             border-color: #2980b9;
         }
-        
+
         .button-group {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
         }
-        
+
         .btn {
             padding: 12px 25px;
             border: none;
@@ -125,129 +132,254 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .btn-ok {
             background: #27ae60;
             color: white;
             flex: 1;
             margin-right: 15px;
         }
-        
+
         .btn-ok:hover {
             background: #219653;
         }
-        
+
         .btn-cancel {
             background: #e74c3c;
             color: white;
             flex: 1;
         }
-        
+
         .btn-cancel:hover {
             background: #c0392b;
         }
-        
+
         .footer {
             text-align: center;
             margin-top: 25px;
             color: #7f8c8d;
             font-size: 14px;
         }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 15px 0;
+            color: #3498db;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1>INSERE PLAYER</h1>
+<div class="container">
+    <div class="logo">
+        <div class="player-icon">
+            <i class="fas fa-user-plus"></i>
         </div>
-        
-        <form id="playerForm">
-            <div class="input-group">
-                <label for="nickname">Nickname:</label>
-                <input type="text" id="nickname" name="nickname" required>
-            </div>
-            
-            <div class="platform-group">
-                <label>Plataforma:</label>
-                <div class="platform-options">
-                    <label class="platform-option">
-                        <input type="radio" name="platform" value="xbox" required> Xbox
-                    </label>
-                    <label class="platform-option">
-                        <input type="radio" name="platform" value="pc"> PC
-                    </label>
-                    <label class="platform-option">
-                        <input type="radio" name="platform" value="nintendo"> Nintendo Switch
-                    </label>
-                    <label class="platform-option">
-                        <input type="radio" name="platform" value="playstation"> Playstation
-                    </label>
-                </div>
-            </div>
-            
-            <div class="input-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="button-group">
-                <button type="submit" class="btn btn-ok">OK</button>
-                <button type="button" class="btn btn-cancel" id="cancelButton">Cancela</button>
-            </div>
-        </form>
-        
-        <div class="footer">
-            <p>&copy; 2025 INSERE PLAYER - Todos os direitos reservados</p>
-        </div>
+        <h1>INSERE PLAYER</h1>
     </div>
 
-    <script>
-        // Adiciona interatividade para as opções de plataforma
-        document.querySelectorAll('.platform-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove a seleção anterior
-                document.querySelectorAll('.platform-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                
-                // Marca a opção atual
-                this.classList.add('selected');
-                
-                // Marca o radio button correspondente
-                const radio = this.querySelector('input[type="radio"]');
-                radio.checked = true;
+    <form id="playerForm">
+        <div class="input-group">
+            <label for="nickname">Nickname:</label>
+            <input type="text" id="nickname" name="nickname" required placeholder="Digite o nickname do player">
+        </div>
+
+        <div class="platform-group">
+            <label>Plataforma:</label>
+            <div class="platform-options">
+                <label class="platform-option">
+                    <input type="radio" name="plataforma" value="Xbox" required> Xbox
+                </label>
+                <label class="platform-option">
+                    <input type="radio" name="plataforma" value="PC"> PC
+                </label>
+                <label class="platform-option">
+                    <input type="radio" name="plataforma" value="Nintendo"> Nintendo Switch
+                </label>
+                <label class="platform-option">
+                    <input type="radio" name="plataforma" value="Playstation"> Playstation
+                </label>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required placeholder="Digite o email do player">
+        </div>
+
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Salvando player...
+        </div>
+
+        <div id="successMessage" class="success-message">
+            <i class="fas fa-check-circle"></i> Player cadastrado com sucesso!
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorText">Erro ao cadastrar player.</span>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-ok">OK</button>
+            <button type="button" class="btn btn-cancel" id="cancelButton">Cancela</button>
+        </div>
+    </form>
+
+    <div class="footer">
+        <p>&copy; 2025 INSERE PLAYER - Todos os direitos reservados</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+    const API_BASE_URL = 'http://localhost:8081/api/players';
+
+    // Adiciona interatividade para as opções de plataforma
+    document.querySelectorAll('.platform-option').forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove a seleção anterior
+            document.querySelectorAll('.platform-option').forEach(opt => {
+                opt.classList.remove('selected');
             });
+
+            this.classList.add('selected');
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
         });
-        
-        // Validação do formulário
-        document.getElementById('playerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nickname = document.getElementById('nickname').value;
-            const platform = document.querySelector('input[name="platform"]:checked');
-            const email = document.getElementById('email').value;
-            
-            if (!nickname || !platform || !email) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
+    });
+
+    // Função para mostrar mensagem de sucesso
+    function showSuccess(message) {
+        const successElement = document.getElementById('successMessage');
+        successElement.style.display = 'block';
+        if (message) {
+            successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        }
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            successElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar mensagem de erro
+    function showError(message) {
+        const errorElement = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        errorElement.style.display = 'block';
+        errorText.textContent = message || 'Erro ao cadastrar player.';
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            errorElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar/ocultar loading
+    function setLoading(loading) {
+        document.getElementById('loading').style.display = loading ? 'block' : 'none';
+    }
+
+    // Função para esconder todas as mensagens
+    function hideMessages() {
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    // Validação do formulário e envio para API
+    document.getElementById('playerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const nickname = document.getElementById('nickname').value.trim();
+        const plataforma = document.querySelector('input[name="plataforma"]:checked');
+        const email = document.getElementById('email').value.trim();
+
+        if (!nickname || !plataforma || !email) {
+            showError('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        // Validar formato de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showError('Por favor, insira um email válido.');
+            return;
+        }
+
+        // Dados para enviar à API
+        const playerData = {
+            nickname: nickname,
+            plataforma: plataforma.value,
+            email: email
+        };
+
+        try {
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(API_BASE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(playerData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
             }
-            
-            // Simulação de cadastro bem-sucedido
-            alert(`Player ${nickname} cadastrado com sucesso!\nPlataforma: ${platform.value.toUpperCase()}\nEmail: ${email}`);
-            
+
+            const savedPlayer = await response.json();
+            console.log('Player cadastrado:', savedPlayer);
+
+            showSuccess(`Player "${savedPlayer.nickname}" cadastrado com sucesso!`);
+
             // Limpa o formulário
             this.reset();
             document.querySelectorAll('.platform-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
-        });
-        
-        // Botão de cancelar - redireciona para a página inicial
-        document.getElementById('cancelButton').addEventListener('click', function() {
-            if (confirm('Tem certeza que deseja cancelar o cadastro?')) {
-                window.location.href = '../inicial.html';
-            }
-        });
-    </script>
+
+        } catch (error) {
+            console.error('Erro ao cadastrar player:', error);
+            showError(error.message || 'Erro ao conectar com o servidor. Verifique se a API está rodando.');
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    // Limpar mensagens ao modificar o formulário
+    document.getElementById('playerForm').addEventListener('input', hideMessages);
+
+    // Botão de cancelar - redireciona para a página inicial
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        if (confirm('Tem certeza que deseja cancelar o cadastro?')) {
+            window.location.href = '../inicial.html';
+        }
+    });
+</script>
 </body>
 </html>

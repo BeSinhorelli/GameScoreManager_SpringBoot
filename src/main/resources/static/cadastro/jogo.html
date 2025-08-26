@@ -26,34 +26,34 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             padding: 30px;
         }
-        
+
         .logo {
             text-align: center;
             margin-bottom: 25px;
         }
-        
+
         .logo h1 {
             color: #2c3e50;
             font-size: 28px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
-        
+
         .input-group {
             margin-bottom: 20px;
         }
-        
+
         .input-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #34495e;
         }
-        
-        .input-group input, 
+
+        .input-group input,
         .input-group select {
             width: 100%;
             padding: 12px 15px;
@@ -62,31 +62,31 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
+
         .input-group input:focus,
         .input-group select:focus {
             border-color: #3498db;
             outline: none;
         }
-        
+
         .type-group {
             margin-bottom: 25px;
         }
-        
+
         .type-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #34495e;
         }
-        
+
         .type-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 10px;
         }
-        
+
         .type-option {
             display: flex;
             align-items: center;
@@ -97,27 +97,27 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .type-option:hover {
             background: #e9ecef;
         }
-        
+
         .type-option input {
             margin-right: 8px;
         }
-        
+
         .type-option.selected {
             background: #9b59b6;
             color: white;
             border-color: #8e44ad;
         }
-        
+
         .button-group {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
         }
-        
+
         .btn {
             padding: 12px 25px;
             border: none;
@@ -127,134 +127,255 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
+
         .btn-save {
             background: #27ae60;
             color: white;
             flex: 1;
             margin-right: 15px;
         }
-        
+
         .btn-save:hover {
             background: #219653;
         }
-        
+
         .btn-cancel {
             background: #e74c3c;
             color: white;
             flex: 1;
         }
-        
+
         .btn-cancel:hover {
             background: #c0392b;
         }
-        
+
         .footer {
             text-align: center;
             margin-top: 25px;
             color: #7f8c8d;
             font-size: 14px;
         }
-        
+
         .game-icon {
             font-size: 40px;
             margin-bottom: 10px;
         }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 15px 0;
+            color: #3498db;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <div class="game-icon">🎮</div>
-            <h1>INSERT GAME</h1>
-        </div>
-        
-        <form id="gameForm">
-            <div class="input-group">
-                <label for="name">Nome:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            
-            <div class="type-group">
-                <label>Tipo:</label>
-                <div class="type-options">
-                    <label class="type-option">
-                        <input type="radio" name="type" value="acao" required> Ação
-                    </label>
-                    <label class="type-option">
-                        <input type="radio" name="type" value="aventura"> Aventura
-                    </label>
-                    <label class="type-option">
-                        <input type="radio" name="type" value="rpg"> RPG
-                    </label>
-                    <label class="type-option">
-                        <input type="radio" name="type" value="esportes"> Esportes
-                    </label>
-                    <label class="type-option">
-                        <input type="radio" name="type" value="estrategia"> Estratégia
-                    </label>
-                    <label class="type-option">
-                        <input type="radio" name="type" value="fps"> FPS
-                    </label>
-                </div>
-            </div>        
-            <div class="button-group">
-                <button type="submit" class="btn btn-save">Salvar</button>
-                <button type="button" class="btn btn-cancel" id="cancelButton">Cancelar</button>
-            </div>
-        </form>
-        
-        <div class="footer">
-            <p>&copy; 2025 INSERE GAME - Todos os direitos reservados</p>
-        </div>
+<div class="container">
+    <div class="logo">
+        <div class="game-icon">🎮</div>
+        <h1>INSERT GAME</h1>
     </div>
 
-    <script>
-        // Adiciona interatividade para as opções de tipo
-        document.querySelectorAll('.type-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove a seleção anterior
-                document.querySelectorAll('.type-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                
-                // Marca a opção atual
-                this.classList.add('selected');
-                
-                // Marca o radio button correspondente
-                const radio = this.querySelector('input[type="radio"]');
-                radio.checked = true;
+    <form id="gameForm">
+        <div class="input-group">
+            <label for="nome">Nome do Jogo:</label>
+            <input type="text" id="nome" name="nome" required placeholder="Digite o nome do jogo">
+        </div>
+
+        <div class="type-group">
+            <label>Tipo do Jogo:</label>
+            <div class="type-options">
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="Ação" required> Ação
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="Aventura"> Aventura
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="RPG"> RPG
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="Esportes"> Esportes
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="Estratégia"> Estratégia
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="FPS"> FPS
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="Corrida"> Corrida
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="tipo" value="Mundo Aberto"> Mundo Aberto
+                </label>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Salvando jogo...
+        </div>
+
+        <div id="successMessage" class="success-message">
+            <i class="fas fa-check-circle"></i> Jogo cadastrado com sucesso!
+        </div>
+
+        <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorText">Erro ao cadastrar jogo.</span>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-save">Salvar</button>
+            <button type="button" class="btn btn-cancel" id="cancelButton">Cancelar</button>
+        </div>
+    </form>
+
+    <div class="footer">
+        <p>&copy; 2025 INSERE GAME - Todos os direitos reservados</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+    const API_BASE_URL = 'http://localhost:8081/api/jogos';
+
+    // Adiciona interatividade para as opções de tipo
+    document.querySelectorAll('.type-option').forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove a seleção anterior
+            document.querySelectorAll('.type-option').forEach(opt => {
+                opt.classList.remove('selected');
             });
+
+            this.classList.add('selected');
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
         });
-        
-        // Validação do formulário
-        document.getElementById('gameForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const type = document.querySelector('input[name="type"]:checked');
-            
-            if (!name || !type) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
+    });
+
+    // Função para mostrar mensagem de sucesso
+    function showSuccess(message) {
+        const successElement = document.getElementById('successMessage');
+        successElement.style.display = 'block';
+        if (message) {
+            successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        }
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            successElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar mensagem de erro
+    function showError(message) {
+        const errorElement = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        errorElement.style.display = 'block';
+        errorText.textContent = message || 'Erro ao cadastrar jogo.';
+
+        // Esconder após 5 segundos
+        setTimeout(() => {
+            errorElement.style.display = 'none';
+        }, 5000);
+    }
+
+    // Função para mostrar/ocultar loading
+    function setLoading(loading) {
+        document.getElementById('loading').style.display = loading ? 'block' : 'none';
+    }
+
+    // Validação do formulário e envio para API
+    document.getElementById('gameForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const nome = document.getElementById('nome').value.trim();
+        const tipo = document.querySelector('input[name="tipo"]:checked');
+
+        if (!nome || !tipo) {
+            showError('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        // Dados para enviar à API
+        const gameData = {
+            nome: nome,
+            tipo: tipo.value
+        };
+
+        try {
+            setLoading(true);
+            hideMessages();
+
+            const response = await fetch(API_BASE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(gameData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
             }
-            
-            // Simulação de cadastro bem-sucedido
-            alert(`Jogo "${name}" cadastrado com sucesso!\nTipo: ${type.value}`);
-            
+
+            const savedGame = await response.json();
+            console.log('Jogo cadastrado:', savedGame);
+
+            showSuccess(`Jogo "${savedGame.nome}" cadastrado com sucesso!`);
+
             // Limpa o formulário
             this.reset();
             document.querySelectorAll('.type-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
-        });
-        
-        // Botão de cancelar - redireciona para a página inicial
-        document.getElementById('cancelButton').addEventListener('click', function() {
-            if (confirm('Tem certeza que deseja cancelar o cadastro?')) {
-                window.location.href = '../inicial.html';
-            }
-        });
-    </script>
+
+        } catch (error) {
+            console.error('Erro ao cadastrar jogo:', error);
+            showError(error.message || 'Erro ao conectar com o servidor. Verifique se a API está rodando.');
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    // Função para esconder todas as mensagens
+    function hideMessages() {
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    // Botão de cancelar - redireciona para a página inicial
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        if (confirm('Tem certeza que deseja cancelar o cadastro?')) {
+            window.location.href = '../inicial.html';
+        }
+    });
+
+    // Limpar mensagens ao modificar o formulário
+    document.getElementById('gameForm').addEventListener('input', hideMessages);
+</script>
 </body>
 </html>
