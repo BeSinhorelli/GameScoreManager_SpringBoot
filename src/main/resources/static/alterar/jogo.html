@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Jogo - GameScore Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .game-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #9b59b6;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #9b59b6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.2);
+        }
+        
+        .type-group {
+            margin-bottom: 25px;
+        }
+        
+        .type-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .type-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .type-option {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .type-option:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .type-option input {
+            margin-right: 8px;
+        }
+        
+        .type-option.selected {
+            background: #9b59b6;
+            color: white;
+            border-color: #8e44ad;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn-ok {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-ok:hover {
+            background: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .btn-cancel {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-cancel:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 480px) {
+            .type-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 15px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="game-icon">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h1>Alterar Jogo</h1>
+            <p>Selecione um jogo e modifique suas informações</p>
+        </div>
+        
+        <div id="loading" class="loading">Carregando jogos...</div>
+        
+        <form id="gameForm" style="display: none;">
+            <div class="form-group">
+                <label for="game-select">Jogo:</label>
+                <select id="game-select" name="game" required>
+                    <option value="">Selecione um jogo</option>
+                    <!-- Os jogos serão carregados via JavaScript -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="type-group">
+                <label>Tipo:</label>
+                <div class="type-options">
+                    <label class="type-option">
+                        <input type="radio" name="type" value="acao"> Ação
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="esportes"> Esportes
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="aventura"> Aventura
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="rpg"> RPG
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="estrategia"> Estratégia
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="fps"> FPS
+                    </label>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" id="cancelButton">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="submit" class="btn btn-ok">
+                    <i class="fas fa-check"></i> Salvar Alterações
+                </button>
+            </div>
+        </form>
+        
+        <div class="footer">
+            <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de jogos (em um sistema real, viriam de uma API)
+        const jogos = [
+            { id: 1, nome: "FIFA 2025", tipo: "esportes" },
+            { id: 2, nome: "Call of Duty", tipo: "fps" },
+            { id: 3, nome: "Minecraft", tipo: "aventura" },
+            { id: 4, nome: "Fortnite", tipo: "acao" }
+        ];
+
+        // Carregar jogos quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameSelect = document.getElementById('game-select');
+            const loadingElement = document.getElementById('loading');
+            const gameForm = document.getElementById('gameForm');
+            
+            // Simular carregamento
+            setTimeout(() => {
+                // Preencher dropdown de jogos
+                jogos.forEach(jogo => {
+                    const option = document.createElement('option');
+                    option.value = jogo.id;
+                    option.textContent = jogo.nome;
+                    gameSelect.appendChild(option);
+                });
+                
+                // Esconder loading e mostrar formulário
+                loadingElement.style.display = 'none';
+                gameForm.style.display = 'block';
+                
+                // Configurar evento de change para o select
+                gameSelect.addEventListener('change', function() {
+                    const selectedGameId = this.value;
+                    if (selectedGameId) {
+                        const selectedGame = jogos.find(jogo => jogo.id == selectedGameId);
+                        if (selectedGame) {
+                            document.getElementById('name').value = selectedGame.nome;
+                            
+                            // Selecionar o tipo correto
+                            document.querySelectorAll('.type-option').forEach(option => {
+                                const radio = option.querySelector('input[type="radio"]');
+                                if (radio.value === selectedGame.tipo) {
+                                    option.classList.add('selected');
+                                    radio.checked = true;
+                                } else {
+                                    option.classList.remove('selected');
+                                    radio.checked = false;
+                                }
+                            });
+                        }
+                    } else {
+                        document.getElementById('name').value = '';
+                        document.querySelectorAll('.type-option').forEach(option => {
+                            option.classList.remove('selected');
+                            const radio = option.querySelector('input[type="radio"]');
+                            radio.checked = false;
+                        });
+                    }
+                });
+            }, 1000); // Simular tempo de carregamento
+        });
+
+        // Adiciona interatividade para as opções de tipo
+        document.querySelectorAll('.type-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove a seleção anterior
+                document.querySelectorAll('.type-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Marca a opção atual
+                this.classList.add('selected');
+                
+                // Marca o radio button correspondente
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+        
+        // Validação do formulário
+        document.getElementById('gameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const gameSelect = document.getElementById('game-select');
+            const name = document.getElementById('name').value;
+            const type = document.querySelector('input[name="type"]:checked');
+            
+            if (!gameSelect.value || !name || !type) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Simulação de alteração bem-sucedida
+            const selectedGame = jogos.find(jogo => jogo.id == gameSelect.value);
+            alert(`Jogo "${selectedGame.nome}" alterado com sucesso!\nNovo nome: ${name}\nNovo tipo: ${type.value}`);
+            
+            // Redireciona para a página inicial
+            window.location.href = '../inicial.html';
+        });
+        
+        // Botão de cancelar
+        document.getElementById('cancelButton').addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja cancelar a alteração?')) {
+                window.location.href = '../inicial.html';
+            }
+        });
+    </script>
+</body>
+</html>

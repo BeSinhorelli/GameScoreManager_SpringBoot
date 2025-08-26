@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Player - GameScore Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .player-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .platform-group {
+            margin-bottom: 25px;
+        }
+        
+        .platform-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .platform-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .platform-option {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .platform-option:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .platform-option input {
+            margin-right: 8px;
+        }
+        
+        .platform-option.selected {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn-ok {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-ok:hover {
+            background: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+        
+        .btn-cancel {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-cancel:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 480px) {
+            .platform-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 15px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="player-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <h1>Alterar Player</h1>
+            <p>Selecione um player e modifique suas informações</p>
+        </div>
+        
+        <div id="loading" class="loading">Carregando players...</div>
+        
+        <form id="playerForm" style="display: none;">
+            <div class="form-group">
+                <label for="player-select">Player:</label>
+                <select id="player-select" name="player" required>
+                    <option value="">Selecione um player</option>
+                    <!-- Os players serão carregados via JavaScript -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="nickname">Nickname:</label>
+                <input type="text" id="nickname" name="nickname" required>
+            </div>
+            
+            <div class="platform-group">
+                <label>Plataforma:</label>
+                <div class="platform-options">
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="nintendo"> Nintendo Switch
+                    </label>
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="pc"> PC
+                    </label>
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="xbox"> Xbox
+                    </label>
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="playstation"> Playstation
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" id="cancelButton">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="submit" class="btn btn-ok">
+                    <i class="fas fa-check"></i> Salvar Alterações
+                </button>
+            </div>
+        </form>
+        
+        <div class="footer">
+            <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de players (em um sistema real, viriam de uma API)
+        const players = [
+            { id: 1, nickname: "joaozinho", platform: "pc", email: "joao@email.com" },
+            { id: 2, nickname: "marygame", platform: "nintendo", email: "mary@email.com" },
+            { id: 3, nickname: "pedroc", platform: "xbox", email: "pedro@email.com" },
+            { id: 4, nickname: "aninha", platform: "playstation", email: "ana@email.com" }
+        ];
+
+        // Carregar players quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            const playerSelect = document.getElementById('player-select');
+            const loadingElement = document.getElementById('loading');
+            const playerForm = document.getElementById('playerForm');
+            
+            // Simular carregamento
+            setTimeout(() => {
+                // Preencher dropdown de players
+                players.forEach(player => {
+                    const option = document.createElement('option');
+                    option.value = player.id;
+                    option.textContent = player.nickname;
+                    playerSelect.appendChild(option);
+                });
+                
+                // Esconder loading e mostrar formulário
+                loadingElement.style.display = 'none';
+                playerForm.style.display = 'block';
+                
+                // Configurar evento de change para o select
+                playerSelect.addEventListener('change', function() {
+                    const selectedPlayerId = this.value;
+                    if (selectedPlayerId) {
+                        const selectedPlayer = players.find(player => player.id == selectedPlayerId);
+                        if (selectedPlayer) {
+                            document.getElementById('nickname').value = selectedPlayer.nickname;
+                            document.getElementById('email').value = selectedPlayer.email;
+                            
+                            // Selecionar a plataforma correta
+                            document.querySelectorAll('.platform-option').forEach(option => {
+                                const radio = option.querySelector('input[type="radio"]');
+                                if (radio.value === selectedPlayer.platform) {
+                                    option.classList.add('selected');
+                                    radio.checked = true;
+                                } else {
+                                    option.classList.remove('selected');
+                                    radio.checked = false;
+                                }
+                            });
+                        }
+                    } else {
+                        document.getElementById('nickname').value = '';
+                        document.getElementById('email').value = '';
+                        document.querySelectorAll('.platform-option').forEach(option => {
+                            option.classList.remove('selected');
+                            const radio = option.querySelector('input[type="radio"]');
+                            radio.checked = false;
+                        });
+                    }
+                });
+            }, 1000); // Simular tempo de carregamento
+        });
+
+        // Adiciona interatividade para as opções de plataforma
+        document.querySelectorAll('.platform-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove a seleção anterior
+                document.querySelectorAll('.platform-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Marca a opção atual
+                this.classList.add('selected');
+                
+                // Marca o radio button correspondente
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+        
+        // Validação do formulário
+        document.getElementById('playerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const playerSelect = document.getElementById('player-select');
+            const nickname = document.getElementById('nickname').value;
+            const platform = document.querySelector('input[name="platform"]:checked');
+            const email = document.getElementById('email').value;
+            
+            if (!playerSelect.value || !nickname || !platform || !email) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Validação de email simples
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, insira um email válido.');
+                return;
+            }
+            
+            // Simulação de alteração bem-sucedida
+            const selectedPlayer = players.find(player => player.id == playerSelect.value);
+            alert(`Player "${selectedPlayer.nickname}" alterado com sucesso!\nNovo nickname: ${nickname}\nNova plataforma: ${platform.value}\nNovo email: ${email}`);
+            
+            // Redireciona para a página inicial
+            window.location.href = '../inicial.html';
+        });
+        
+        // Botão de cancelar
+        document.getElementById('cancelButton').addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja cancelar a alteração?')) {
+                window.location.href = '../inicial.html';
+            }
+        });
+    </script>
+</body>
+</html>

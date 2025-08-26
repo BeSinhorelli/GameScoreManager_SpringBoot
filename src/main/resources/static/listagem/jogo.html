@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Jogos - GameScore Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: #7f8c8d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-button:hover {
+            background: #636e72;
+            transform: translateY(-2px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            margin-top: 10px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        .game-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #9b59b6;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0 15px;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-box i {
+            color: #7f8c8d;
+            margin-right: 10px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            width: 100%;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-group select {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .games-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .games-table thead {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .games-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .games-table th i {
+            margin-left: 5px;
+        }
+
+        .games-table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s;
+        }
+
+        .games-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .games-table tbody tr:hover {
+            background: #f3e5f5;
+        }
+
+        .games-table td {
+            padding: 16px;
+            color: #2c3e50;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .type-aventura {
+            background: #3498db;
+        }
+
+        .type-acao {
+            background: #e74c3c;
+        }
+
+        .type-rpg {
+            background: #2ecc71;
+        }
+
+        .type-esporte {
+            background: #f39c12;
+        }
+
+        .type-estrategia {
+            background: #9b59b6;
+        }
+
+        .type-corrida {
+            background: #16a085;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            background: #9b59b6;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pagination button:hover {
+            background: #8e44ad;
+        }
+
+        .pagination button.active {
+            background: #2c3e50;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: white;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #ffeaea;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .games-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .filter-group select {
+                flex: 1;
+            }
+
+            .back-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <button class="back-button" onclick="window.location.href='../inicial.html'">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+
+    <div class="header">
+        <div class="game-icon">
+            <i class="fas fa-gamepad"></i>
+        </div>
+        <h1>Listagem de Jogos</h1>
+        <p>Visualize todos os jogos cadastrados no sistema</p>
+    </div>
+
+    <div class="controls">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Pesquisar jogos...">
+        </div>
+
+        <div class="filter-group">
+            <select id="typeFilter">
+                <option value="">Todos os tipos</option>
+                <option value="Ação">Ação</option>
+                <option value="Aventura">Aventura</option>
+                <option value="RPG">RPG</option>
+                <option value="Esporte">Esporte</option>
+                <option value="Estratégia">Estratégia</option>
+                <option value="Corrida">Corrida</option>
+            </select>
+
+            <select id="sortBy">
+                <option value="codigo">Ordenar por ID</option>
+                <option value="nome">Ordenar por Nome</option>
+                <option value="tipo">Ordenar por Tipo</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Carregando jogos...
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText">Erro ao carregar os jogos.</span>
+    </div>
+
+    <div id="gamesContent" style="display: none;">
+        <table class="games-table">
+            <thead>
+            <tr>
+                <th data-sort="codigo">ID <i class="fas fa-sort"></i></th>
+                <th data-sort="nome">Nome <i class="fas fa-sort"></i></th>
+                <th data-sort="tipo">Tipo <i class="fas fa-sort"></i></th>
+            </tr>
+            </thead>
+            <tbody id="gamesTableBody">
+            <!-- Os jogos serão carregados via JavaScript -->
+            </tbody>
+        </table>
+
+        <div class="pagination" id="pagination">
+            <!-- A paginação será gerada via JavaScript -->
+        </div>
+    </div>
+
+    <div id="noResults" class="no-results" style="display: none;">
+        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 15px;"></i>
+        <p>Nenhum jogo encontrado com os critérios de pesquisa.</p>
+    </div>
+</div>
+
+<div class="footer">
+    <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
+</div>
+
+<script>
+    // Variáveis globais
+    let allGames = [];
+    let currentPage = 1;
+    const gamesPerPage = 10; // Aumentei para 10 para melhor visualização
+    let filteredGames = [];
+    let sortField = 'codigo';
+    let sortDirection = 'asc';
+    let searchTimeout = null;
+
+    // URL base da API (ajuste conforme necessário)
+    const API_BASE_URL = 'http://localhost:8081/api/jogos';
+
+    // Função para buscar jogos da API
+    async function fetchGames() {
+        try {
+            showLoading();
+
+            // Adicionando headers para evitar problemas de CORS
+            const response = await fetch(API_BASE_URL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+            }
+
+            const games = await response.json();
+
+            // Verificar se a resposta contém um array
+            if (!Array.isArray(games)) {
+                throw new Error('Resposta da API não é um array válido');
+            }
+
+            console.log('Jogos recebidos:', games.length);
+
+            // Se houver muitos jogos, limitamos para demonstração
+            if (games.length > 100) {
+                allGames = games.slice(0, 100); // Limita a 100 jogos para performance
+                console.log(`Limitando a exibição para 100 jogos de ${games.length} disponíveis`);
+            } else {
+                allGames = games;
+            }
+
+            filteredGames = [...allGames];
+            hideLoading();
+            renderGamesTable();
+        } catch (error) {
+            console.error('Erro ao buscar jogos:', error);
+            showError('Erro ao carregar jogos. Verifique se a API está rodando em http://localhost:8081');
+        }
+    }
+
+    // Função para buscar jogos por nome
+    async function searchGamesByName(searchTerm) {
+        try {
+            if (searchTerm.trim() === '') {
+                // Se a pesquisa estiver vazia, use todos os jogos
+                filteredGames = [...allGames];
+                renderGamesTable();
+                return;
+            }
+
+            showLoading();
+            const response = await fetch(`${API_BASE_URL}/search?nome=${encodeURIComponent(searchTerm)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const searchResults = await response.json();
+
+            if (!Array.isArray(searchResults)) {
+                throw new Error('Resposta da pesquisa não é um array válido');
+            }
+
+            filteredGames = searchResults;
+            currentPage = 1; // Reset para a primeira página
+            hideLoading();
+            renderGamesTable();
+        } catch (error) {
+            console.error('Erro ao buscar jogos:', error);
+            showError('Erro ao pesquisar jogos.');
+
+            // Fallback: filtro local se a API falhar
+            filteredGames = allGames.filter(game =>
+                game.nome.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderGamesTable();
+        }
+    }
+
+    // Função para buscar jogos por tipo
+    async function filterGamesByType(type) {
+        try {
+            if (type === '') {
+                // Se nenhum tipo selecionado, use todos os jogos
+                filteredGames = [...allGames];
+                renderGamesTable();
+                return;
+            }
+
+            showLoading();
+            const response = await fetch(`${API_BASE_URL}/tipo/${encodeURIComponent(type)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const typeResults = await response.json();
+
+            if (!Array.isArray(typeResults)) {
+                throw new Error('Resposta do filtro por tipo não é um array válido');
+            }
+
+            filteredGames = typeResults;
+            currentPage = 1; // Reset para a primeira página
+            hideLoading();
+            renderGamesTable();
+        } catch (error) {
+            console.error('Erro ao filtrar jogos:', error);
+            showError('Erro ao filtrar jogos por tipo.');
+
+            // Fallback: filtro local se a API falhar
+            filteredGames = allGames.filter(game =>
+                game.tipo && game.tipo.toLowerCase() === type.toLowerCase()
+            );
+            renderGamesTable();
+        }
+    }
+
+    // Função para renderizar a tabela de jogos
+    function renderGamesTable() {
+        const tableBody = document.getElementById('gamesTableBody');
+        tableBody.innerHTML = '';
+
+        // Ordenar jogos
+        sortGames();
+
+        // Calcular jogos para a página atual
+        const startIndex = (currentPage - 1) * gamesPerPage;
+        const endIndex = startIndex + gamesPerPage;
+        const gamesToShow = filteredGames.slice(startIndex, endIndex);
+
+        if (gamesToShow.length === 0) {
+            document.getElementById('gamesContent').style.display = 'none';
+            document.getElementById('noResults').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('gamesContent').style.display = 'block';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+
+        // Preencher a tabela com os jogos
+        gamesToShow.forEach(game => {
+            const row = document.createElement('tr');
+
+            // Determinar a classe do tipo
+            let typeClass = '';
+            if (game.tipo) {
+                switch(game.tipo.toLowerCase()) {
+                    case 'ação':
+                    case 'acao': typeClass = 'type-acao'; break;
+                    case 'aventura': typeClass = 'type-aventura'; break;
+                    case 'rpg': typeClass = 'type-rpg'; break;
+                    case 'esporte': typeClass = 'type-esporte'; break;
+                    case 'estratégia':
+                    case 'estrategia': typeClass = 'type-estrategia'; break;
+                    case 'corrida': typeClass = 'type-corrida'; break;
+                    case 'mundo aberto': typeClass = 'type-aventura'; break;
+                    default: typeClass = 'type-estrategia';
+                }
+            } else {
+                typeClass = 'type-estrategia';
+            }
+
+            row.innerHTML = `
+                <td>${game.codigo || 'N/A'}</td>
+                <td>${game.nome || 'Nome não disponível'}</td>
+                <td><span class="type-badge ${typeClass}">${game.tipo || 'Não especificado'}</span></td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+
+        // Renderizar paginação
+        renderPagination();
+    }
+
+    // Função para ordenar jogos
+    function sortGames() {
+        filteredGames.sort((a, b) => {
+            let valueA = a[sortField];
+            let valueB = b[sortField];
+
+            // Tratar valores undefined ou null
+            if (valueA === null || valueA === undefined) valueA = '';
+            if (valueB === null || valueB === undefined) valueB = '';
+
+            // Para ordenação de strings
+            if (typeof valueA === 'string') {
+                valueA = valueA.toLowerCase();
+                valueB = valueB.toLowerCase();
+            }
+
+            if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+            if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    // Função para renderizar a paginação
+    function renderPagination() {
+        const paginationElement = document.getElementById('pagination');
+        paginationElement.innerHTML = '';
+
+        const totalPages = Math.ceil(filteredGames.length / gamesPerPage);
+
+        if (totalPages <= 1) return;
+
+        // Botão anterior
+        if (currentPage > 1) {
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevButton.addEventListener('click', () => {
+                currentPage--;
+                renderGamesTable();
+            });
+            paginationElement.appendChild(prevButton);
+        }
+
+        // Páginas
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (i === currentPage) {
+                pageButton.classList.add('active');
+            }
+            pageButton.addEventListener('click', () => {
+                currentPage = i;
+                renderGamesTable();
+            });
+            paginationElement.appendChild(pageButton);
+        }
+
+        // Botão próximo
+        if (currentPage < totalPages) {
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextButton.addEventListener('click', () => {
+                currentPage++;
+                renderGamesTable();
+            });
+            paginationElement.appendChild(nextButton);
+        }
+    }
+
+    // Funções auxiliares para exibir/ocultar estados
+    function showLoading() {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('gamesContent').style.display = 'none';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    function hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    function showError(message) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('gamesContent').style.display = 'none';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorText').textContent = message;
+    }
+
+    // Inicializar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Buscar jogos da API
+        fetchGames();
+
+        // Configurar eventos
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.trim();
+
+            // Debounce para evitar muitas requisições
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (searchTerm === '') {
+                    // Se campo vazio, recarregar todos os jogos
+                    filteredGames = [...allGames];
+                    currentPage = 1;
+                    renderGamesTable();
+                } else {
+                    searchGamesByName(searchTerm);
+                }
+            }, 500);
+        });
+
+        document.getElementById('typeFilter').addEventListener('change', function() {
+            const selectedType = this.value;
+            filterGamesByType(selectedType);
+        });
+
+        document.getElementById('sortBy').addEventListener('change', function() {
+            sortField = this.value;
+            sortDirection = 'asc';
+            renderGamesTable();
+        });
+
+        // Configurar ordenação ao clicar nos cabeçalhos
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const field = th.getAttribute('data-sort');
+
+                if (sortField === field) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortField = field;
+                    sortDirection = 'asc';
+                }
+
+                // Atualizar o select de ordenação para refletir a mudança
+                document.getElementById('sortBy').value = sortField;
+
+                renderGamesTable();
+            });
+        });
+    });
+</script>
+</body>
+</html>

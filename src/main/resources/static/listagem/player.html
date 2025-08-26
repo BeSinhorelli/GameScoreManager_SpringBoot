@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Players - GameScore Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: #7f8c8d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-button:hover {
+            background: #636e72;
+            transform: translateY(-2px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            margin-top: 10px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .player-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0 15px;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        
+        .search-box i {
+            color: #7f8c8d;
+            margin-right: 10px;
+        }
+        
+        .search-box input {
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            width: 100%;
+            outline: none;
+            font-size: 16px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-group select {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .players-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .players-table thead {
+            background: #3498db;
+            color: white;
+        }
+        
+        .players-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .players-table th i {
+            margin-left: 5px;
+        }
+        
+        .players-table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s;
+        }
+        
+        .players-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .players-table tbody tr:hover {
+            background: #e3f2fd;
+        }
+        
+        .players-table td {
+            padding: 16px;
+            color: #2c3e50;
+        }
+        
+        .platform-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .platform-pc {
+            background: #3498db;
+        }
+        
+        .platform-playstation {
+            background: #003791;
+        }
+        
+        .platform-xbox {
+            background: #107c10;
+        }
+        
+        .platform-nintendo {
+            background: #e60012;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 10px;
+        }
+        
+        .pagination button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pagination button:hover {
+            background: #2980b9;
+        }
+        
+        .pagination button.active {
+            background: #2c3e50;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: white;
+            font-size: 14px;
+            width: 100%;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #ffeaea;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .players-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .filter-group select {
+                flex: 1;
+            }
+
+            .back-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <button class="back-button" onclick="window.location.href='../inicial.html'">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+
+    <div class="header">
+        <div class="player-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h1>Listagem de Players</h1>
+        <p>Visualize todos os players cadastrados no sistema</p>
+    </div>
+
+    <div class="controls">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Pesquisar players...">
+        </div>
+
+        <div class="filter-group">
+            <select id="platformFilter">
+                <option value="">Todas as plataformas</option>
+                <option value="PC">PC</option>
+                <option value="Playstation">Playstation</option>
+                <option value="Xbox">Xbox</option>
+                <option value="Nintendo">Nintendo Switch</option>
+            </select>
+
+            <select id="sortBy">
+                <option value="id">Ordenar por ID</option>
+                <option value="nickname">Ordenar por Nickname</option>
+                <option value="plataforma">Ordenar por Plataforma</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Carregando players...
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText">Erro ao carregar os players.</span>
+    </div>
+
+    <div id="playersContent" style="display: none;">
+        <table class="players-table">
+            <thead>
+            <tr>
+                <th data-sort="id">ID <i class="fas fa-sort"></i></th>
+                <th data-sort="nickname">Nickname <i class="fas fa-sort"></i></th>
+                <th data-sort="plataforma">Plataforma <i class="fas fa-sort"></i></th>
+                <th data-sort="email">Email <i class="fas fa-sort"></i></th>
+            </tr>
+            </thead>
+            <tbody id="playersTableBody">
+            <!-- Os players serão carregados via JavaScript -->
+            </tbody>
+        </table>
+
+        <div class="pagination" id="pagination">
+            <!-- A paginação será gerada via JavaScript -->
+        </div>
+    </div>
+
+    <div id="noResults" class="no-results" style="display: none;">
+        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 15px;"></i>
+        <p>Nenhum player encontrado com os critérios de pesquisa.</p>
+    </div>
+</div>
+
+<div class="footer">
+    <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
+</div>
+
+<script>
+    // Variáveis globais
+    let allPlayers = [];
+    let currentPage = 1;
+    const playersPerPage = 10;
+    let filteredPlayers = [];
+    let sortField = 'id';
+    let sortDirection = 'asc';
+    let searchTimeout = null;
+
+    // URL base da API (ajuste conforme necessário)
+    const API_BASE_URL = 'http://localhost:8081/api/players';
+
+    // Função para buscar players da API
+    async function fetchPlayers() {
+        try {
+            showLoading();
+            const response = await fetch(API_BASE_URL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+            }
+
+            const players = await response.json();
+
+            // Verificar se a resposta contém um array
+            if (!Array.isArray(players)) {
+                throw new Error('Resposta da API não é um array válido');
+            }
+
+            console.log('Players recebidos:', players.length);
+            allPlayers = players;
+            filteredPlayers = [...allPlayers];
+
+            hideLoading();
+            renderPlayersTable();
+        } catch (error) {
+            console.error('Erro ao buscar players:', error);
+            showError('Erro ao carregar players. Verifique se a API está rodando em http://localhost:8081');
+        }
+    }
+
+    // Função para buscar players por nickname
+    async function searchPlayersByNickname(searchTerm) {
+        try {
+            if (searchTerm.trim() === '') {
+                // Se a pesquisa estiver vazia, use todos os players
+                filteredPlayers = [...allPlayers];
+                renderPlayersTable();
+                return;
+            }
+
+            showLoading();
+            const response = await fetch(`${API_BASE_URL}/search?nickname=${encodeURIComponent(searchTerm)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const searchResults = await response.json();
+
+            if (!Array.isArray(searchResults)) {
+                throw new Error('Resposta da pesquisa não é um array válido');
+            }
+
+            filteredPlayers = searchResults;
+            currentPage = 1; // Reset para a primeira página
+            hideLoading();
+            renderPlayersTable();
+        } catch (error) {
+            console.error('Erro ao buscar players:', error);
+            showError('Erro ao pesquisar players.');
+
+            // Fallback: filtro local se a API falhar
+            filteredPlayers = allPlayers.filter(player =>
+                player.nickname && player.nickname.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderPlayersTable();
+        }
+    }
+
+    // Função para buscar players por plataforma
+    async function filterPlayersByPlatform(platform) {
+        try {
+            if (platform === '') {
+                // Se nenhuma plataforma selecionada, use todos os players
+                filteredPlayers = [...allPlayers];
+                renderPlayersTable();
+                return;
+            }
+
+            showLoading();
+            const response = await fetch(`${API_BASE_URL}/plataforma/${encodeURIComponent(platform)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const platformResults = await response.json();
+
+            if (!Array.isArray(platformResults)) {
+                throw new Error('Resposta do filtro por plataforma não é um array válido');
+            }
+
+            filteredPlayers = platformResults;
+            currentPage = 1; // Reset para a primeira página
+            hideLoading();
+            renderPlayersTable();
+        } catch (error) {
+            console.error('Erro ao filtrar players:', error);
+            showError('Erro ao filtrar players por plataforma.');
+
+            // Fallback: filtro local se a API falhar
+            filteredPlayers = allPlayers.filter(player =>
+                player.plataforma && player.plataforma.toLowerCase() === platform.toLowerCase()
+            );
+            renderPlayersTable();
+        }
+    }
+
+    // Função para renderizar a tabela de players
+    function renderPlayersTable() {
+        const tableBody = document.getElementById('playersTableBody');
+        tableBody.innerHTML = '';
+
+        // Ordenar players
+        sortPlayers();
+
+        // Calcular players para a página atual
+        const startIndex = (currentPage - 1) * playersPerPage;
+        const endIndex = startIndex + playersPerPage;
+        const playersToShow = filteredPlayers.slice(startIndex, endIndex);
+
+        if (playersToShow.length === 0) {
+            document.getElementById('playersContent').style.display = 'none';
+            document.getElementById('noResults').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('playersContent').style.display = 'block';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+
+        // Preencher a tabela com os players
+        playersToShow.forEach(player => {
+            const row = document.createElement('tr');
+
+            // Determinar a classe da plataforma
+            let platformClass = '';
+            if (player.plataforma) {
+                switch(player.plataforma.toLowerCase()) {
+                    case 'pc': platformClass = 'platform-pc'; break;
+                    case 'playstation': platformClass = 'platform-playstation'; break;
+                    case 'xbox': platformClass = 'platform-xbox'; break;
+                    case 'nintendo':
+                    case 'nintendo switch': platformClass = 'platform-nintendo'; break;
+                    default: platformClass = 'platform-pc';
+                }
+            } else {
+                platformClass = 'platform-pc';
+            }
+
+            row.innerHTML = `
+                <td>${player.id || 'N/A'}</td>
+                <td>${player.nickname || 'Nickname não disponível'}</td>
+                <td><span class="platform-badge ${platformClass}">${player.plataforma || 'Não especificada'}</span></td>
+                <td>${player.email || 'Email não disponível'}</td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+
+        // Renderizar paginação
+        renderPagination();
+    }
+
+    // Função para ordenar players
+    function sortPlayers() {
+        filteredPlayers.sort((a, b) => {
+            let valueA = a[sortField];
+            let valueB = b[sortField];
+
+            // Tratar valores undefined ou null
+            if (valueA === null || valueA === undefined) valueA = '';
+            if (valueB === null || valueB === undefined) valueB = '';
+
+            // Para ordenação de strings
+            if (typeof valueA === 'string') {
+                valueA = valueA.toLowerCase();
+                valueB = valueB.toLowerCase();
+            }
+
+            if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+            if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    // Função para renderizar a paginação
+    function renderPagination() {
+        const paginationElement = document.getElementById('pagination');
+        paginationElement.innerHTML = '';
+
+        const totalPages = Math.ceil(filteredPlayers.length / playersPerPage);
+
+        if (totalPages <= 1) return;
+
+        // Botão anterior
+        if (currentPage > 1) {
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevButton.addEventListener('click', () => {
+                currentPage--;
+                renderPlayersTable();
+            });
+            paginationElement.appendChild(prevButton);
+        }
+
+        // Páginas
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (i === currentPage) {
+                pageButton.classList.add('active');
+            }
+            pageButton.addEventListener('click', () => {
+                currentPage = i;
+                renderPlayersTable();
+            });
+            paginationElement.appendChild(pageButton);
+        }
+
+        // Botão próximo
+        if (currentPage < totalPages) {
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextButton.addEventListener('click', () => {
+                currentPage++;
+                renderPlayersTable();
+            });
+            paginationElement.appendChild(nextButton);
+        }
+    }
+
+    // Funções auxiliares para exibir/ocultar estados
+    function showLoading() {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('playersContent').style.display = 'none';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    function hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    function showError(message) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('playersContent').style.display = 'none';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorText').textContent = message;
+    }
+
+    // Inicializar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Buscar players da API
+        fetchPlayers();
+
+        // Configurar eventos
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.trim();
+
+            // Debounce para evitar muitas requisições
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (searchTerm === '') {
+                    // Se campo vazio, recarregar todos os players
+                    filteredPlayers = [...allPlayers];
+                    currentPage = 1;
+                    renderPlayersTable();
+                } else {
+                    searchPlayersByNickname(searchTerm);
+                }
+            }, 500);
+        });
+
+        document.getElementById('platformFilter').addEventListener('change', function() {
+            const selectedPlatform = this.value;
+            filterPlayersByPlatform(selectedPlatform);
+        });
+
+        document.getElementById('sortBy').addEventListener('change', function() {
+            sortField = this.value;
+            sortDirection = 'asc';
+            renderPlayersTable();
+        });
+
+        // Configurar ordenação ao clicar nos cabeçalhos
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const field = th.getAttribute('data-sort');
+
+                if (sortField === field) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortField = field;
+                    sortDirection = 'asc';
+                }
+
+                // Atualizar o select de ordenação para refletir a mudança
+                document.getElementById('sortBy').value = sortField;
+
+                renderPlayersTable();
+            });
+        });
+    });
+</script>
+</body>
+</html>

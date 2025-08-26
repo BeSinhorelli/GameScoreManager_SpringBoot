@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .platform-group {
+            margin-bottom: 25px;
+        }
+        
+        .platform-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .platform-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .platform-option {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .platform-option:hover {
+            background: #e9ecef;
+        }
+        
+        .platform-option input {
+            margin-right: 8px;
+        }
+        
+        .platform-option.selected {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-ok {
+            background: #27ae60;
+            color: white;
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .btn-ok:hover {
+            background: #219653;
+        }
+        
+        .btn-cancel {
+            background: #e74c3c;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-cancel:hover {
+            background: #c0392b;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>INSERE PLAYER</h1>
+        </div>
+        
+        <form id="playerForm">
+            <div class="input-group">
+                <label for="nickname">Nickname:</label>
+                <input type="text" id="nickname" name="nickname" required>
+            </div>
+            
+            <div class="platform-group">
+                <label>Plataforma:</label>
+                <div class="platform-options">
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="xbox" required> Xbox
+                    </label>
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="pc"> PC
+                    </label>
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="nintendo"> Nintendo Switch
+                    </label>
+                    <label class="platform-option">
+                        <input type="radio" name="platform" value="playstation"> Playstation
+                    </label>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="btn btn-ok">OK</button>
+                <button type="button" class="btn btn-cancel" id="cancelButton">Cancela</button>
+            </div>
+        </form>
+        
+        <div class="footer">
+            <p>&copy; 2025 INSERE PLAYER - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <script>
+        // Adiciona interatividade para as opções de plataforma
+        document.querySelectorAll('.platform-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove a seleção anterior
+                document.querySelectorAll('.platform-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Marca a opção atual
+                this.classList.add('selected');
+                
+                // Marca o radio button correspondente
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+        
+        // Validação do formulário
+        document.getElementById('playerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nickname = document.getElementById('nickname').value;
+            const platform = document.querySelector('input[name="platform"]:checked');
+            const email = document.getElementById('email').value;
+            
+            if (!nickname || !platform || !email) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Simulação de cadastro bem-sucedido
+            alert(`Player ${nickname} cadastrado com sucesso!\nPlataforma: ${platform.value.toUpperCase()}\nEmail: ${email}`);
+            
+            // Limpa o formulário
+            this.reset();
+            document.querySelectorAll('.platform-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+        });
+        
+        // Botão de cancelar - redireciona para a página inicial
+        document.getElementById('cancelButton').addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja cancelar o cadastro?')) {
+                window.location.href = '../inicial.html';
+            }
+        });
+    </script>
+</body>
+</html>

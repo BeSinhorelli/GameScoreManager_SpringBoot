@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Scores - GameScore Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 1000px;
+            padding: 30px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 15px;
+            background: #7f8c8d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-button:hover {
+            background: #636e72;
+            transform: translateY(-2px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            margin-top: 10px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .score-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #27ae60;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0 15px;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+        
+        .search-box i {
+            color: #7f8c8d;
+            margin-right: 10px;
+        }
+        
+        .search-box input {
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            width: 100%;
+            outline: none;
+            font-size: 16px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-group select {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .scores-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .scores-table thead {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .scores-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .scores-table th i {
+            margin-left: 5px;
+        }
+        
+        .scores-table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s;
+        }
+        
+        .scores-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .scores-table tbody tr:hover {
+            background: #eafaf1;
+        }
+        
+        .scores-table td {
+            padding: 16px;
+            color: #2c3e50;
+        }
+        
+        .score-value {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .date-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #f1f1f1;
+            color: #7f8c8d;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 10px;
+        }
+        
+        .pagination button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            background: #27ae60;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pagination button:hover {
+            background: #219653;
+        }
+        
+        .pagination button.active {
+            background: #2c3e50;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: white;
+            font-size: 14px;
+            width: 100%;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #e74c3c;
+            background-color: #ffeaea;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .scores-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .filter-group select {
+                flex: 1;
+            }
+
+            .back-button {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <button class="back-button" onclick="window.location.href='../inicial.html'">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+
+    <div class="header">
+        <div class="score-icon">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <h1>Listagem de Scores</h1>
+        <p>Visualize todos os scores registrados no sistema</p>
+    </div>
+
+    <div class="controls">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Pesquisar scores...">
+        </div>
+
+        <div class="filter-group">
+            <select id="gameFilter">
+                <option value="">Todos os jogos</option>
+                <!-- Os jogos serão carregados dinamicamente -->
+            </select>
+
+            <select id="sortBy">
+                <option value="score">Ordenar por Score</option>
+                <option value="player.nickname">Ordenar por Nickname</option>
+                <option value="jogo.nome">Ordenar por Jogo</option>
+                <option value="data">Ordenar por Data</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Carregando scores...
+    </div>
+
+    <div id="errorMessage" class="error-message" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText">Erro ao carregar os scores.</span>
+    </div>
+
+    <div id="scoresContent" style="display: none;">
+        <table class="scores-table">
+            <thead>
+            <tr>
+                <th data-sort="player.nickname">Nickname <i class="fas fa-sort"></i></th>
+                <th data-sort="jogo.nome">Jogo <i class="fas fa-sort"></i></th>
+                <th data-sort="score">Score <i class="fas fa-sort"></i></th>
+                <th data-sort="data">Data <i class="fas fa-sort"></i></th>
+            </tr>
+            </thead>
+            <tbody id="scoresTableBody">
+            <!-- Os scores serão carregados via JavaScript -->
+            </tbody>
+        </table>
+
+        <div class="pagination" id="pagination">
+            <!-- A paginação será gerada via JavaScript -->
+        </div>
+    </div>
+
+    <div id="noResults" class="no-results" style="display: none;">
+        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 15px;"></i>
+        <p>Nenhum score encontrado com os critérios de pesquisa.</p>
+    </div>
+</div>
+
+<div class="footer">
+    <p>&copy; 2025 GameScore Manager - Todos os direitos reservados</p>
+</div>
+
+<script>
+    // Variáveis globais
+    let allScores = [];
+    let allGames = [];
+    let currentPage = 1;
+    const scoresPerPage = 10;
+    let filteredScores = [];
+    let sortField = 'score';
+    let sortDirection = 'desc';
+    let searchTimeout = null;
+
+    // URL base da API (ajuste conforme necessário)
+    const API_BASE_URL = 'http://localhost:8081/api/scores';
+    const API_GAMES_URL = 'http://localhost:8081/api/jogos';
+
+    // Função para formatar scores com separador de milhar
+    function formatScore(score) {
+        return score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // Função para formatar data
+    function formatDate(dateString) {
+        if (!dateString) return 'Data não disponível';
+
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+    // Função para buscar scores da API
+    async function fetchScores() {
+        try {
+            showLoading();
+
+            // Buscar scores
+            const response = await fetch(API_BASE_URL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+            }
+
+            const scores = await response.json();
+
+            // Verificar se a resposta contém um array
+            if (!Array.isArray(scores)) {
+                throw new Error('Resposta da API não é um array válido');
+            }
+
+            console.log('Scores recebidos:', scores.length);
+            allScores = scores;
+            filteredScores = [...allScores];
+
+            // Buscar jogos para o filtro
+            await fetchGames();
+
+            hideLoading();
+            renderScoresTable();
+        } catch (error) {
+            console.error('Erro ao buscar scores:', error);
+            showError('Erro ao carregar scores. Verifique se a API está rodando em http://localhost:8081');
+        }
+    }
+
+    // Função para buscar jogos da API
+    async function fetchGames() {
+        try {
+            const response = await fetch(API_GAMES_URL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const games = await response.json();
+
+            if (Array.isArray(games)) {
+                allGames = games;
+
+                // Preencher o dropdown de jogos
+                const gameFilter = document.getElementById('gameFilter');
+
+                // Manter a opção "Todos os jogos"
+                const allOption = gameFilter.options[0];
+                gameFilter.innerHTML = '';
+                gameFilter.appendChild(allOption);
+
+                // Adicionar jogos ao dropdown
+                games.forEach(game => {
+                    const option = document.createElement('option');
+                    option.value = game.codigo || game.id;
+                    option.textContent = game.nome || `Jogo ${game.codigo || game.id}`;
+                    gameFilter.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao buscar jogos:', error);
+        }
+    }
+
+    // Função para buscar scores por nickname
+    async function searchScoresByNickname(searchTerm) {
+        try {
+            if (searchTerm.trim() === '') {
+                // Se a pesquisa estiver vazia, use todos os scores
+                filteredScores = [...allScores];
+                renderScoresTable();
+                return;
+            }
+
+            showLoading();
+            const response = await fetch(`${API_BASE_URL}/search?nickname=${encodeURIComponent(searchTerm)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const searchResults = await response.json();
+
+            if (!Array.isArray(searchResults)) {
+                throw new Error('Resposta da pesquisa não é um array válido');
+            }
+
+            filteredScores = searchResults;
+            currentPage = 1; // Reset para a primeira página
+            hideLoading();
+            renderScoresTable();
+        } catch (error) {
+            console.error('Erro ao buscar scores:', error);
+            showError('Erro ao pesquisar scores.');
+
+            // Fallback: filtro local se a API falhar
+            filteredScores = allScores.filter(score =>
+                score.player && score.player.nickname &&
+                score.player.nickname.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderScoresTable();
+        }
+    }
+
+    // Função para buscar scores por jogo
+    async function filterScoresByGame(gameId) {
+        try {
+            if (gameId === '') {
+                // Se nenhum jogo selecionado, use todos os scores
+                filteredScores = [...allScores];
+                renderScoresTable();
+                return;
+            }
+
+            showLoading();
+            const response = await fetch(`${API_BASE_URL}/jogo/${encodeURIComponent(gameId)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const gameResults = await response.json();
+
+            if (!Array.isArray(gameResults)) {
+                throw new Error('Resposta do filtro por jogo não é um array válido');
+            }
+
+            filteredScores = gameResults;
+            currentPage = 1; // Reset para a primeira página
+            hideLoading();
+            renderScoresTable();
+        } catch (error) {
+            console.error('Erro ao filtrar scores:', error);
+            showError('Erro ao filtrar scores por jogo.');
+
+            // Fallback: filtro local se a API falhar
+            filteredScores = allScores.filter(score =>
+                score.jogo && (score.jogo.codigo == gameId || score.jogo.id == gameId)
+            );
+            renderScoresTable();
+        }
+    }
+
+    // Função para renderizar a tabela de scores
+    function renderScoresTable() {
+        const tableBody = document.getElementById('scoresTableBody');
+        tableBody.innerHTML = '';
+
+        // Ordenar scores
+        sortScores();
+
+        // Calcular scores para a página atual
+        const startIndex = (currentPage - 1) * scoresPerPage;
+        const endIndex = startIndex + scoresPerPage;
+        const scoresToShow = filteredScores.slice(startIndex, endIndex);
+
+        if (scoresToShow.length === 0) {
+            document.getElementById('scoresContent').style.display = 'none';
+            document.getElementById('noResults').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('scoresContent').style.display = 'block';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+
+        // Preencher a tabela com os scores
+        scoresToShow.forEach(score => {
+            const row = document.createElement('tr');
+
+            const nickname = score.player ? score.player.nickname : 'N/A';
+            const gameName = score.jogo ? score.jogo.nome : 'Jogo não disponível';
+            const scoreValue = score.score || 0;
+            const date = formatDate(score.data);
+
+            row.innerHTML = `
+                <td>${nickname}</td>
+                <td>${gameName}</td>
+                <td class="score-value">${formatScore(scoreValue)}</td>
+                <td><span class="date-badge">${date}</span></td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+
+        // Renderizar paginação
+        renderPagination();
+    }
+
+    // Função para ordenar scores
+    function sortScores() {
+        filteredScores.sort((a, b) => {
+            let valueA, valueB;
+
+            // Obter valores para ordenação com base no campo selecionado
+            if (sortField === 'player.nickname') {
+                valueA = a.player ? a.player.nickname : '';
+                valueB = b.player ? b.player.nickname : '';
+            } else if (sortField === 'jogo.nome') {
+                valueA = a.jogo ? a.jogo.nome : '';
+                valueB = b.jogo ? b.jogo.nome : '';
+            } else if (sortField === 'score') {
+                valueA = a.score || 0;
+                valueB = b.score || 0;
+
+                // Para ordenação numérica
+                return sortDirection === 'desc' ? valueB - valueA : valueA - valueB;
+            } else if (sortField === 'data') {
+                valueA = a.data ? new Date(a.data) : new Date(0);
+                valueB = b.data ? new Date(b.data) : new Date(0);
+
+                // Para ordenação de datas
+                return sortDirection === 'desc' ? valueB - valueA : valueA - valueB;
+            } else {
+                valueA = a[sortField] || '';
+                valueB = b[sortField] || '';
+            }
+
+            // Para ordenação de strings
+            if (typeof valueA === 'string') {
+                valueA = valueA.toLowerCase();
+                valueB = valueB.toLowerCase();
+            }
+
+            if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+            if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    // Função para renderizar a paginação
+    function renderPagination() {
+        const paginationElement = document.getElementById('pagination');
+        paginationElement.innerHTML = '';
+
+        const totalPages = Math.ceil(filteredScores.length / scoresPerPage);
+
+        if (totalPages <= 1) return;
+
+        // Botão anterior
+        if (currentPage > 1) {
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevButton.addEventListener('click', () => {
+                currentPage--;
+                renderScoresTable();
+            });
+            paginationElement.appendChild(prevButton);
+        }
+
+        // Páginas
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (i === currentPage) {
+                pageButton.classList.add('active');
+            }
+            pageButton.addEventListener('click', () => {
+                currentPage = i;
+                renderScoresTable();
+            });
+            paginationElement.appendChild(pageButton);
+        }
+
+        // Botão próximo
+        if (currentPage < totalPages) {
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextButton.addEventListener('click', () => {
+                currentPage++;
+                renderScoresTable();
+            });
+            paginationElement.appendChild(nextButton);
+        }
+    }
+
+    // Funções auxiliares para exibir/ocultar estados
+    function showLoading() {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('scoresContent').style.display = 'none';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+
+    function hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    function showError(message) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('scoresContent').style.display = 'none';
+        document.getElementById('noResults').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorText').textContent = message;
+    }
+
+    // Inicializar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Buscar scores da API
+        fetchScores();
+
+        // Configurar eventos
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.trim();
+
+            // Debounce para evitar muitas requisições
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (searchTerm === '') {
+                    // Se campo vazio, recarregar todos os scores
+                    filteredScores = [...allScores];
+                    currentPage = 1;
+                    renderScoresTable();
+                } else {
+                    searchScoresByNickname(searchTerm);
+                }
+            }, 500);
+        });
+
+        document.getElementById('gameFilter').addEventListener('change', function() {
+            const selectedGameId = this.value;
+            filterScoresByGame(selectedGameId);
+        });
+
+        document.getElementById('sortBy').addEventListener('change', function() {
+            sortField = this.value;
+            sortDirection = sortField === 'score' ? 'desc' : 'asc';
+            renderScoresTable();
+        });
+
+        // Configurar ordenação ao clicar nos cabeçalhos
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const field = th.getAttribute('data-sort');
+
+                if (sortField === field) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortField = field;
+                    sortDirection = field === 'score' ? 'desc' : 'asc';
+                }
+
+                // Atualizar o select de ordenação para refletir a mudança
+                document.getElementById('sortBy').value = sortField;
+
+                renderScoresTable();
+            });
+        });
+    });
+</script>
+</body>
+</html>

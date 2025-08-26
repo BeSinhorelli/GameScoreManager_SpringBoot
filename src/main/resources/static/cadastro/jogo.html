@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Jogo - INSERE GAME</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .input-group input, 
+        .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .type-group {
+            margin-bottom: 25px;
+        }
+        
+        .type-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .type-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .type-option {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .type-option:hover {
+            background: #e9ecef;
+        }
+        
+        .type-option input {
+            margin-right: 8px;
+        }
+        
+        .type-option.selected {
+            background: #9b59b6;
+            color: white;
+            border-color: #8e44ad;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-save {
+            background: #27ae60;
+            color: white;
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .btn-save:hover {
+            background: #219653;
+        }
+        
+        .btn-cancel {
+            background: #e74c3c;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-cancel:hover {
+            background: #c0392b;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .game-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <div class="game-icon">🎮</div>
+            <h1>INSERT GAME</h1>
+        </div>
+        
+        <form id="gameForm">
+            <div class="input-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="type-group">
+                <label>Tipo:</label>
+                <div class="type-options">
+                    <label class="type-option">
+                        <input type="radio" name="type" value="acao" required> Ação
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="aventura"> Aventura
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="rpg"> RPG
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="esportes"> Esportes
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="estrategia"> Estratégia
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="type" value="fps"> FPS
+                    </label>
+                </div>
+            </div>        
+            <div class="button-group">
+                <button type="submit" class="btn btn-save">Salvar</button>
+                <button type="button" class="btn btn-cancel" id="cancelButton">Cancelar</button>
+            </div>
+        </form>
+        
+        <div class="footer">
+            <p>&copy; 2025 INSERE GAME - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <script>
+        // Adiciona interatividade para as opções de tipo
+        document.querySelectorAll('.type-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove a seleção anterior
+                document.querySelectorAll('.type-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Marca a opção atual
+                this.classList.add('selected');
+                
+                // Marca o radio button correspondente
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+        
+        // Validação do formulário
+        document.getElementById('gameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const type = document.querySelector('input[name="type"]:checked');
+            
+            if (!name || !type) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Simulação de cadastro bem-sucedido
+            alert(`Jogo "${name}" cadastrado com sucesso!\nTipo: ${type.value}`);
+            
+            // Limpa o formulário
+            this.reset();
+            document.querySelectorAll('.type-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+        });
+        
+        // Botão de cancelar - redireciona para a página inicial
+        document.getElementById('cancelButton').addEventListener('click', function() {
+            if (confirm('Tem certeza que deseja cancelar o cadastro?')) {
+                window.location.href = '../inicial.html';
+            }
+        });
+    </script>
+</body>
+</html>
