@@ -7,8 +7,7 @@ Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** p
 
 ## ✨ Funcionalidades
 
-- ✅ **CRUD Completo** – Create, Read, Update, Delete para todas as entidades  
-- 📅 **Filtros por Data** – Consultas personalizadas por período  
+- ✅ **CRUD Completo** – Create, Read, Update, Delete para todas as entidades   
 - 🌐 **API REST** – Endpoints HTTP padrão REST  
 - 🗄️ **Persistência MySQL** – Armazenamento robusto com **Spring Data JPA**
 
