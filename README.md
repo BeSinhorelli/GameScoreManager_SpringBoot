@@ -107,6 +107,6 @@ game-score-api/
 <p align= "center"><img width="400" height="400" alt="3" src="https://github.com/user-attachments/assets/35de00c7-6df0-4ab6-9e4b-02f4fa7ea020" /></p>
 
 ## 👨‍💻 Autor
-Bernardo Sinhorelli  
+### Bernardo Sinhorelli  
 🔗 GitHub: [BeSinhorelli](https://github.com/BeSinhorelli)  
 🔗 LinkedIn: [bernardosinhorelli](https://www.linkedin.com/in/bernardosinhorelli/)  
