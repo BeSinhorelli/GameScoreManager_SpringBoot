@@ -77,7 +77,7 @@ game-score-api/
 -  **Spring Data JPA**
 -  **MySQL 5.5.5**
 -  **Maven**
--  **Tomcat Embedded**
+-  **Postman**
 -  **HTML, CSS e JavaScript**
 
 ---
