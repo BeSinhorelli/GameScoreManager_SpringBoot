@@ -82,6 +82,10 @@ game-score-api/
 
 ---
 
+## 🗄️ Modelo fisico do Banco de Dados
+![Banco](https://github.com/user-attachments/assets/98c8a80e-6a95-4ffe-8100-317918ced031) 
+
+---
 ## 🔌 Configuração
 
 ### Pré-requisitos
