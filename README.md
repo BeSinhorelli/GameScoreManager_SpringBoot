@@ -95,7 +95,10 @@ game-score-api/
 
 ### Passos para rodar o projeto
 
-1. Clone este repositório:  git clone https://github.com/seu-usuario/game-score-api.git
+1. Clone este repositório:
+````bash
+   git clone https://github.com/seu-usuario/game-score-api.git
+````
 2. Requisição do postman: http://localhost:8081
 <p align="left">
 <img width="400" height="400" alt="1" src="https://github.com/user-attachments/assets/bbccb51e-fcbf-402a-ab57-c2f7daeb2a35" />
