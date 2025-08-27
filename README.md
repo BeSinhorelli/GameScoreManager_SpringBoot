@@ -93,8 +93,9 @@ game-score-api/
 
 1. Clone este repositório:  git clone https://github.com/seu-usuario/game-score-api.git
 2. Requisição do postman: http://localhost:8081
-
-<img width="1280" height="1024" alt="1" src="https://github.com/user-attachments/assets/bbccb51e-fcbf-402a-ab57-c2f7daeb2a35" />
-<img width="1280" height="1024" alt="2" src="https://github.com/user-attachments/assets/9b1b4efa-8141-4ec5-acdd-e510dbb1e9a4" />
-<img width="1280" height="1024" alt="3" src="https://github.com/user-attachments/assets/35de00c7-6df0-4ab6-9e4b-02f4fa7ea020" />
+<p align="left">
+<img width="500" height="500" alt="1" src="https://github.com/user-attachments/assets/bbccb51e-fcbf-402a-ab57-c2f7daeb2a35" />
+<img width="500" height="500" alt="2" src="https://github.com/user-attachments/assets/9b1b4efa-8141-4ec5-acdd-e510dbb1e9a4" />
+  </p>
+<p align= "center"><img width="500" height="500" alt="3" src="https://github.com/user-attachments/assets/35de00c7-6df0-4ab6-9e4b-02f4fa7ea020" /></p>
 
