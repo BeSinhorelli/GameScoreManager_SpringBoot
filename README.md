@@ -1,4 +1,4 @@
-<h1 align="center">🎮 GameManager em Spring Boot</h1>
+<h1 align="center">🎮 GameScoreManager em Spring Boot</h1>
 
 Uma API Rest desenvolvida em **Java Spring Boot** para gerenciamento de **jogos, players e scores**.  
 Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** para uma **arquitetura web moderna**.
