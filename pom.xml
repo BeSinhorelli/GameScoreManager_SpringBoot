@@ -12,7 +12,7 @@
 	<artifactId>game-score-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>game-score-api</name>
-	<description>Sistema de pontuação de jogos com Java Spring Boot</description>
+	<description>GameScoreManager Java Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
