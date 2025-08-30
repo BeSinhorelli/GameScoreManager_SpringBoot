@@ -100,7 +100,6 @@ game-score-api/
 ````bash
    git clone https://github.com/seu-usuario/game-score-api.git
 ````
-2. Requisição do postman: http://localhost:8081
 <p align="left">
 <img width="400" height="400" alt="1" src="https://github.com/user-attachments/assets/bbccb51e-fcbf-402a-ab57-c2f7daeb2a35" />
 <img width="400" height="400" alt="2" src="https://github.com/user-attachments/assets/9b1b4efa-8141-4ec5-acdd-e510dbb1e9a4" />
