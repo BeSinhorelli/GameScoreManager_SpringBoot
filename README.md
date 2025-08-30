@@ -8,7 +8,7 @@ Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** p
 ## ✨ Funcionalidades
 
 - ✅ **CRUD Completo** – Create, Read, Update, Delete para todas as entidades   
-- 🌐 **API REST** – Endpoints HTTP padrão REST  
+- 🌐 **API REST** – Endpoints HTTP padrão REST via Postman 
 - 🗄️ **Persistência MySQL** – Armazenamento robusto com **Spring Data JPA**
 - 💻 **Sistema web completo** - Feito em HTML, CSS e JavaScript
 
