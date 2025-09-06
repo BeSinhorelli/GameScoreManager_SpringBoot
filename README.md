@@ -9,7 +9,7 @@ Sistema originalmente adaptado de uma aplicação **desktop Swing com JFrame** p
 
 - ✅ **CRUD Completo** – Create, Read, Update, Delete para todas as entidades   
 - 🌐 **API REST** – requisições HTTP padrão REST via Postman 
-- 🗄️ **Banco de dados MySQL** – Armazenamento de dados utilizando junto com **Spring Data JPA**
+- 🗄️ **Banco de dados MySQL** – Armazenamento de dados utilizando junto com **Spring Data JPA** no **XAMPP**
 - 💻 **Sistema web completo** - Feito em HTML, CSS e JavaScript
 
 ---
